@@ -10,6 +10,7 @@
     animation-duration: 2s;
     margin: 5% auto;
     alignment: center;
+    max-width: 50%;
 }
 
 .playlist-div {
@@ -18,7 +19,7 @@
     display: grid;
 }
 
-#playlist-h2 {
+.h2-top-center {
     margin: 5%;
 }
 
@@ -27,7 +28,7 @@
     alignment: center;
 }
 
-.add-songs-steps-li {
+.list-item {
     font-size: 18px;
 }
 
