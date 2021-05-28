@@ -24,7 +24,7 @@
                 <a class="nav-link px-2" href="playlist.php">Lejátszási lista</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link px-2" href="#">GYIK</a>
+                <a class="nav-link px-2" href="faq.php">GYIK</a>
             </li>
         </ul>
     </div>

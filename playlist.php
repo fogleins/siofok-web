@@ -20,7 +20,7 @@
     }
 ?>
 
-<h2 class="text-primary text-center h2-top-center">Idei kooperatív lista</h2>
+<h2 class="text-primary text-center h2-top-center-margin">Idei kooperatív lista</h2>
 <div class="container playlist-div">
     <div class="floating-div playlist-div">
         <h4 class="text-primary">Zene hozzáadása:</h4>
