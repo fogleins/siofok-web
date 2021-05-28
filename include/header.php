@@ -6,6 +6,7 @@
 </head>
 <body>
 <link rel="stylesheet" href="bootstrap.min.css">
+<link rel="stylesheet" href="customStyles.css">
 <script src="bootstrap.bundle.min.js"></script>
   <nav class="p-3 mb-3 border-bottom">
 <!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">-->
@@ -16,7 +17,16 @@
             <a class="nav-link px-2" href=".">Kezdőlap</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link px-2" href="profile.php">Profil</a>
+            <a class="nav-link px-2" href="#">Időpontválasztás</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link px-2" href="#">Étel- és italszavazás</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link px-2" href="playlist.php">Lejátszási lista</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link px-2" href="#">GYIK</a>
         </li>
 
         <div class="col-md-3 text-end">

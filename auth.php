@@ -75,4 +75,4 @@
             $db->close();
     }
 
-    header("Location: .");
+    header(isset($_SESSION['redirect']) ? "Location: " . $_SESSION['redirect'] : "Location: .");

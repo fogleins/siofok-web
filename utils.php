@@ -49,4 +49,12 @@ class Utils
                 $db->close();
         }
     }
+
+    /**
+     * @return mysqli A mysqli database object representing the database used throughout the project.
+     */
+    public static function getDbObject(): mysqli
+    {
+        return new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+    }
 }
