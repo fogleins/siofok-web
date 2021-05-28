@@ -1,0 +1,32 @@
+@keyframes float {
+    from { top: 20%; opacity: 0.8; }
+    to { top: 0; opacity: 1; }
+}
+
+.floating-div {
+    width: fit-content;
+    position: relative;
+    animation-name: float;
+    animation-duration: 2s;
+    margin: 5% auto;
+    alignment: center;
+}
+
+.playlist-div {
+    margin: auto;
+    align-content: center;
+    display: grid;
+}
+
+#playlist-h2 {
+    margin: 5%;
+}
+
+#playlist-btn {
+    margin: 10% auto;
+    alignment: center;
+}
+
+.add-songs-steps-li {
+    font-size: 18px;
+}
