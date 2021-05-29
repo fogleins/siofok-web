@@ -1,5 +1,5 @@
 @keyframes float {
-    from { top: 20%; opacity: 0.8; }
+    from { top: 10%; opacity: 0.8; }
     to { top: 0; opacity: 1; }
 }
 
@@ -7,7 +7,7 @@
     width: fit-content;
     position: relative;
     animation-name: float;
-    animation-duration: 2s;
+    animation-duration: 1s;
     margin: 5% auto;
     alignment: center;
     max-width: 50%;
@@ -34,4 +34,49 @@
 
 header {
     background: white;
+}
+
+.footer {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    margin-top: 3%;
+    padding: 0.5rem;
+    background-color: #f3f3f3;
+    color: darkgray;
+    text-align: center;
+}
+
+/* unvisited link */
+.footer-link:link {
+    color: darkgray;
+}
+
+/* visited link */
+.footer-link:visited {
+    color: darkgray;
+}
+
+/* mouse over link */
+.footer-link:hover {
+    color: #2c3034;
+}
+
+/* selected link */
+.footer-link:active {
+    color: #343a40;
+}
+
+.footer-div {
+    display: inline-block;
+    margin: 0.5rem 2rem;
+}
+
+/* helps aligning the footer
+   to the bottom of the page */
+.wrapper-div {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
 }

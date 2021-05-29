@@ -17,6 +17,7 @@
     <title><?php echo $_SESSION['fullName'] . " profilja" ?></title>
 </head>
 <body>
+<div class="wrapper-div">
     <?php
         include "include/header.php";
         echo "<h2 class='text-primary text-center h2-top-center-margin'>Hello " . $_SESSION['givenName'] . "!</h2>";
@@ -25,6 +26,7 @@
     <div class="container">
         <?php echo "<img src='" . $_SESSION['pictureLink'] . "' >" ?>
     </div>
-<!--    <pre>--><?php //var_dump($_SESSION); ?><!--</pre>-->
+    <?php include "include/footer.php"; ?>
+</div>
 </body>
 </html>

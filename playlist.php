@@ -20,6 +20,7 @@
     }
 ?>
 
+<div class="wrapper-div">
 <h2 class="text-primary text-center h2-top-center-margin">Idei kooperatív lista</h2>
 <div class="container playlist-div">
     <div class="floating-div playlist-div">
@@ -47,5 +48,7 @@
         ?>
     </div>
 </div>
+</div>
+<?php include "include/footer.php"; ?>
 </body>
 </html>
