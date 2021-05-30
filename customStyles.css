@@ -84,10 +84,8 @@ header {
 .drinks-table {
     margin-left: auto;
     margin-right: auto;
-    /*border-collapse: separate;*/
-    /*border-spacing: 4vh;*/
     border-collapse: separate;
-    width: 40% ;
+    width: 40%;
 }
 
 .drinks-th, .drinks-td {
@@ -98,7 +96,8 @@ header {
 }
 
 .drinks-vote-btn {
-    width: 90%;
+    width: 60%;
+    height: 60%;
     font-size: 14pt;
     /* set font bolder */
     font-weight: 500;

@@ -22,7 +22,8 @@
         exit();
     }
 ?>
-<div class="floating-div">
+<h2 class='text-primary text-center h2-top-center-margin'>Italszavazás</h2>
+<div class="floating-div" id="votes-div">
     <?php
         $db = Utils::getDbObject();
         try {
@@ -33,7 +34,6 @@
                 echo "<h5 class='text-secondary'><i>Nincs megjelenítendő adat</i></h5>";
                 exit();
             }
-            echo "<h2 class='text-primary text-center h2-top-center-margin'>Italszavazás</h2>";
             echo "<table class='drinks-table' id='drinks-table'>";
             while ($row = $result->fetch_row()) {
                 echo "<tr><td class='text-primary drinks-td'>" . $row[0] . "</td>";
