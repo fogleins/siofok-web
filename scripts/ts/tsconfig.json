@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "module": "system",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -8,7 +7,9 @@
     "sourceMap": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "module": "es6",
+    "target": "ES6"
   },
   "include": ["./*"],
   "exclude": ["node_modules", "**/*.spec.ts"]

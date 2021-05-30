@@ -3,7 +3,7 @@ enum VoteType {
     other // todo
 }
 
-function submitVote(userID: number, drinkID: number) : void {
+function submitVote(userID: number, drinkID: number): void {
     const voteType: VoteType = VoteType.drinks;
     $.ajax({
         "url": "vote_handler.php",
@@ -28,11 +28,3 @@ function submitVote(userID: number, drinkID: number) : void {
         }
     });
 }
-
-// TODO
-// function drinksTimer() : void {
-    // fire every 15 seconds
-    // window.setInterval(function () {
-    //     document.getElementById("drinks-table").innerHTML = "update successful";
-    // }, 15000);
-// }

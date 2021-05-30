@@ -4,7 +4,7 @@ var VoteType;
     VoteType[VoteType["other"] = 1] = "other";
 })(VoteType || (VoteType = {}));
 function submitVote(userID, drinkID) {
-    var voteType = VoteType.drinks;
+    const voteType = VoteType.drinks;
     $.ajax({
         "url": "vote_handler.php",
         "type": "GET",

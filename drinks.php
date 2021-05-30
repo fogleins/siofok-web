@@ -8,8 +8,9 @@
     <title>Italok</title>
 </head>
 <script src="jquery-3.6.0.min.js"></script>
-<script src="scripts/js/scripts.js"></script>
-<body onload="drinksTimer()">
+<script src="scripts/js/scripts.js"></script> <!-- Used as button callback -->
+<script src="scripts/js/drinksVoteUpdater.js"></script>
+<body onload="new DrinksVoteUpdater();">
 <?php
     include "include/includes.html";
     include_once "utils.php";
