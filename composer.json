@@ -2,6 +2,7 @@
     "require": {
         "google/apiclient": "^2.7",
         "myclabs/php-enum": "^1.8",
-        "ext-mysqli": "*"
+        "ext-mysqli": "*",
+        "ext-json": "*"
     }
 }

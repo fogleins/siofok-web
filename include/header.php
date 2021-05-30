@@ -9,7 +9,7 @@
             <a class="nav-link px-2" href="#">Időpontválasztás</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link px-2" href="#">Étel- és italszavazás</a>
+            <a class="nav-link px-2" href="drinks.php">Italszavazás</a>
         </li>
         <li class="nav-item">
             <a class="nav-link px-2" href="playlist.php">Lejátszási lista</a>

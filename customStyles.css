@@ -80,3 +80,26 @@ header {
     flex-direction: column;
     justify-content: space-between;
 }
+
+.drinks-table {
+    margin-left: auto;
+    margin-right: auto;
+    /*border-collapse: separate;*/
+    /*border-spacing: 4vh;*/
+    border-collapse: separate;
+    width: 40% ;
+}
+
+.drinks-th, .drinks-td {
+    padding: 8px;
+    text-align: center;
+    width: 10%;
+    font-size: 16pt;
+}
+
+.drinks-vote-btn {
+    width: 90%;
+    font-size: 14pt;
+    /* set font bolder */
+    font-weight: 500;
+}
