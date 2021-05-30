@@ -1,10 +1,10 @@
 var VoteType;
 (function (VoteType) {
-    VoteType[VoteType["drinks"] = 0] = "drinks";
-    VoteType[VoteType["other"] = 1] = "other";
+    VoteType[VoteType["drinkAdd"] = 0] = "drinkAdd";
+    VoteType[VoteType["drinkRemove"] = 1] = "drinkRemove";
+    VoteType[VoteType["other"] = 2] = "other";
 })(VoteType || (VoteType = {}));
-function submitVote(userID, drinkID) {
-    const voteType = VoteType.drinks;
+function submitVote(userID, drinkID, action) {
     $.ajax({
         "url": "vote_handler.php",
         "type": "GET",
@@ -13,11 +13,10 @@ function submitVote(userID, drinkID) {
         "data": {
             userId: userID,
             drinkId: drinkID,
-            voteType: voteType
+            action: action
         },
         "success": function (data) {
-            alert("success");
-            if (data.status && data.added) {
+            if (data.success) {
                 console.log("ok");
             }
         },

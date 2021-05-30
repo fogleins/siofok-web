@@ -1,10 +1,10 @@
 enum VoteType {
-    drinks,
+    drinkAdd,
+    drinkRemove,
     other // todo
 }
 
-function submitVote(userID: number, drinkID: number): void {
-    const voteType: VoteType = VoteType.drinks;
+function submitVote(userID: number, drinkID: number, action: VoteType): void {
     $.ajax({
         "url": "vote_handler.php",
         "type": "GET",
@@ -13,12 +13,11 @@ function submitVote(userID: number, drinkID: number): void {
         "data": {
             userId: userID,
             drinkId: drinkID,
-            voteType: voteType
+            action: action
         },
         // todo: handle success and error
         "success": function (data: any) {
-            alert("success");
-            if (data.status && data.added) {
+            if (data.success) {
                 console.log("ok");
             }
         },
