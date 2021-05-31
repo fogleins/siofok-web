@@ -29,6 +29,7 @@ class Utils
      * @param int|null $userID int The user's id
      */
     public static function logEvent(LogType $eventType, string $description, int $userID = null) {
+        $eventType = $eventType->getValue();
         $db = null;
         try {
             $db = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
@@ -41,7 +42,6 @@ class Utils
             }
             $stmt->bind_param('isi', $userID, $description, $eventType);
             $stmt->execute();
-            $result = $stmt->get_result();
         } catch (Exception $e) {
             echo $e->getMessage();
         } finally {
