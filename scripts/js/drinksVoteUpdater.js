@@ -34,12 +34,14 @@ class DrinksVoteUpdater {
                         document.querySelectorAll("tr")[i].querySelectorAll("td")[j - 1]
                             .innerHTML = data[i][j];
                     }
-                    document.getElementById(("drinks-plus-btn-" + i)).disabled = data[i][3];
+                    document.getElementById("drinks-plus-btn-" + i)
+                        .disabled = data[i][3];
                     document.getElementById(("drinks-plus-btn-" + i)).onclick = function () {
                         submitVote(DrinksVoteUpdater.instance.userId, data[i][0], VoteType.drinkAdd);
                         DrinksVoteUpdater.instance.update();
                     };
-                    document.getElementById(("drinks-minus-btn-" + i)).disabled = data[i][4];
+                    document.getElementById("drinks-minus-btn-" + i)
+                        .disabled = data[i][4];
                     document.getElementById(("drinks-minus-btn-" + i)).onclick = function () {
                         submitVote(DrinksVoteUpdater.instance.userId, data[i][0], VoteType.drinkRemove);
                         DrinksVoteUpdater.instance.update();
