@@ -1,6 +1,7 @@
 enum VoteType {
     drinkAdd,
     drinkRemove,
+    drinkAddSuggestion,
     other // todo
 }
 

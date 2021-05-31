@@ -2,7 +2,8 @@ var VoteType;
 (function (VoteType) {
     VoteType[VoteType["drinkAdd"] = 0] = "drinkAdd";
     VoteType[VoteType["drinkRemove"] = 1] = "drinkRemove";
-    VoteType[VoteType["other"] = 2] = "other";
+    VoteType[VoteType["drinkAddSuggestion"] = 2] = "drinkAddSuggestion";
+    VoteType[VoteType["other"] = 3] = "other";
 })(VoteType || (VoteType = {}));
 function submitVote(userID, drinkID, action) {
     $.ajax({

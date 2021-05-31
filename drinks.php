@@ -41,10 +41,10 @@
             $result = $db->query("SELECT drinks.name, drinks.drink_ID, COUNT(drinks_votes.drink_ID) AS votes "
                 . "FROM drinks LEFT OUTER JOIN drinks_votes ON drinks_votes.drink_ID = drinks.drink_ID "
                 . "GROUP BY drinks.drink_ID ORDER BY votes DESC;");
-            if ($result->num_rows < 1) {
-                echo "<h5 class='text-secondary'><i>Nincs megjelenítendő adat</i></h5>";
-                exit();
-            }
+
+            echo "<h5 class='text-center text-secondary' style='margin-bottom: 8%' id='drinks-no-data' hidden> "
+                . "<i>Nincs megjelenítendő adat</i></h5>";
+            include "include/vote_suggestion_control.html";
             echo "<table class='drinks-table' id='drinks-table'>";
             $btnIndex = 0;
             while ($row = $result->fetch_row()) {

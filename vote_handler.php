@@ -5,30 +5,55 @@
     abstract class VoteType {
         const drinkAdd = 0;
         const drinkRemove = 1;
-        const other = 2; // todo
+        const drinkAddSuggestion = 2;
+        const other = 3; // todo
     }
 
-    if ($_GET['action'] == VoteType::drinkAdd || $_GET['action'] == VoteType::drinkRemove) {
-        $db = Utils::getDbObject();
-        try {
-            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-            if ($_GET['action'] == VoteType::drinkAdd) {
-                $stmt = $db->prepare("INSERT INTO drinks_votes VALUES (?, ?)");
-            } else {
-                $stmt = $db->prepare("DELETE FROM drinks_votes WHERE user_ID = ? AND drink_ID = ?");
+    $db = Utils::getDbObject();
+    try {
+        $stmt = null;
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        // TODO: azonos nevűből ne lehessen újat hozzáadni + trim
+        if ($_GET['action'] == VoteType::drinkAddSuggestion) {
+            // insert the suggested drink into the database
+            $stmt = $db->prepare("INSERT INTO drinks (suggested_by, name) VALUES (?, ?)");
+            $stmt->bind_param("is", $_GET['userId'], $_GET['drinkName']);
+            if (!$stmt->execute()) {
+                echo json_encode(array("success" => false));
+                exit();
             }
-            if (!$stmt) {
-                throw new Exception("Cannot prepare sql query");
-            }
-            $stmt->bind_param("ii", $_GET['userId'], $_GET['drinkId']);
+            $stmt->store_result();
+            $stmt->free_result();
+            // get the id of the added item
+            $stmt = $db->prepare("SELECT drink_ID FROM drinks WHERE added = (SELECT MAX(added) FROM drinks)");
             if ($stmt->execute()) {
-                echo json_encode(array("success" => true));
-                return;
+                $drinkId = $stmt->get_result()->fetch_row()[0];
+                $stmt->free_result();
+                $stmt = $db->prepare("INSERT INTO drinks_votes VALUES (?, ?)");
+                $stmt->bind_param("ii", $_GET['userId'], $drinkId);
+                if ($stmt->execute()) {
+                    $stmt->store_result();
+                    $stmt->free_result();
+                }
             }
-            echo json_encode(array("success" => false));
-        } catch (Exception $exception) {
-            Utils::logEvent(LogType::ERROR(), "Error in vote_handler.php: " . $exception->getMessage());
-        } finally {
-            $db->close();
+        } else if ($_GET['action'] == VoteType::drinkAdd) {
+            $stmt = $db->prepare("INSERT INTO drinks_votes VALUES (?, ?)");
+            $stmt->bind_param("ii", $_GET['userId'], $_GET['drinkId']);
+            if (!$stmt->execute()) {
+                echo json_encode(array("success" => false));
+                exit();
+            }
+        } else if ($_GET['action'] == VoteType::drinkRemove) {
+            $stmt = $db->prepare("DELETE FROM drinks_votes WHERE user_ID = ? AND drink_ID = ?");
+            $stmt->bind_param("ii", $_GET['userId'], $_GET['drinkId']);
+            if (!$stmt->execute()) {
+                echo json_encode(array("success" => false));
+                exit();
+            }
         }
+        echo json_encode(array("success" => true));
+    } catch (Exception $exception) {
+        Utils::logEvent(LogType::ERROR(), "Error in vote_handler.php: " . $exception->getMessage());
+    } finally {
+        $db->close();
     }

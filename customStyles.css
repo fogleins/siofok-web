@@ -86,6 +86,7 @@ header {
     margin-right: auto;
     border-collapse: separate;
     width: 40%;
+    /*table-layout: fixed;*/
 }
 
 .drinks-th, .drinks-td {
@@ -93,6 +94,10 @@ header {
     text-align: center;
     width: 10%;
     font-size: 16pt;
+    /* handle long text */
+    /*overflow: hidden;*/
+    /*white-space: nowrap;*/
+    /*text-overflow: ellipsis;*/
 }
 
 .drinks-vote-btn {
@@ -101,4 +106,18 @@ header {
     font-size: 14pt;
     /* set font bolder */
     font-weight: 500;
+}
+
+#drink-suggestion-control {
+    margin-bottom: 5%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#drink-suggestion {
+    max-width: 30%;
+    margin-left: 1%;
+    margin-right: 1%;
 }

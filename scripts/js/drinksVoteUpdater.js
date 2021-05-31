@@ -1,5 +1,5 @@
 class DrinksVoteUpdater {
-    constructor(interval = 3) {
+    constructor(interval = 30) {
         this._interval = interval;
     }
     static get instance() {
@@ -29,10 +29,40 @@ class DrinksVoteUpdater {
                 userId: DrinksVoteUpdater.instance.userId
             },
             "success": function (data) {
+                let table = document.getElementById("drinks-table");
+                document.getElementById("drinks-no-data").hidden = data.length != 0;
                 for (let i = 0; i < data.length; i++) {
+                    let row;
+                    if (i == table.rows.length) {
+                        row = table.insertRow(i);
+                        for (let k = 0; k < 4; k++) {
+                            let cell = row.insertCell(k);
+                            cell.classList.add("drinks-td");
+                            if (k < 2) {
+                                cell.classList.add("text-primary");
+                            }
+                            else {
+                                let button = document.createElement('button');
+                                button.classList.add("btn", "btn-sm", "drinks-vote-btn");
+                                if (k == 2) {
+                                    button.classList.add("btn-outline-success");
+                                    button.id = "drinks-plus-btn-" + i;
+                                    button.textContent = "+";
+                                }
+                                else {
+                                    button.classList.add("btn-outline-danger");
+                                    button.id = "drinks-minus-btn-" + i;
+                                    button.textContent = "-";
+                                }
+                                cell.appendChild(button);
+                            }
+                        }
+                    }
+                    else {
+                        row = document.querySelectorAll("tr")[i];
+                    }
                     for (let j = 1; j < 3; j++) {
-                        document.querySelectorAll("tr")[i].querySelectorAll("td")[j - 1]
-                            .innerHTML = data[i][j];
+                        row.querySelectorAll("td")[j - 1].innerHTML = data[i][j];
                     }
                     document.getElementById("drinks-plus-btn-" + i)
                         .disabled = data[i][3];
@@ -52,6 +82,33 @@ class DrinksVoteUpdater {
                 console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
             }
         });
+    }
+    addSuggestion() {
+        let suggestion = document.getElementById("drink-suggestion").value;
+        if (suggestion == null || suggestion === "") {
+            return;
+        }
+        $.ajax({
+            "url": "vote_handler.php",
+            "type": "GET",
+            "timeout": 5000,
+            "dataType": "json",
+            "data": {
+                action: VoteType.drinkAddSuggestion,
+                userId: DrinksVoteUpdater.instance.userId,
+                drinkName: suggestion
+            },
+            "success": function (data) {
+                if (data.success) {
+                    console.log("suggestion successfully saved");
+                }
+            },
+            "error": function (err) {
+                alert("error");
+                console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
+            }
+        });
+        this.update();
     }
 }
 DrinksVoteUpdater._instance = new DrinksVoteUpdater();
