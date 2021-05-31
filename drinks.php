@@ -23,34 +23,30 @@
         echo "<body>";
         exit();
     }
-    echo "<body onload='DrinksVoteUpdater.instance.userId = " . $_SESSION['userId'] . ";'>";
 ?>
 <script type="text/javascript">
-    function addButtonClicked(drinkId) {
-        submitVote(<?php echo $_SESSION['userId']; ?>, drinkId, VoteType.drinkAdd);
-        DrinksVoteUpdater.instance.update();
-    }
-
-    function removeButtonClicked(drinkId) {
-        submitVote(<?php echo $_SESSION['userId']; ?>, drinkId, VoteType.drinkRemove);
-        DrinksVoteUpdater.instance.update();
+    function onLoad() {
+        DrinksVoteUpdater.instance.userId = <?php echo $_SESSION['userId']; ?>;
     }
 </script>
+<body onload="onLoad()">
 <h2 class='text-primary text-center h2-top-center-margin'>Italszavazás</h2>
 <div class="floating-div" id="votes-div">
     <?php
         $db = Utils::getDbObject();
         try {
+            // TODO: text field + button for adding a suggestion
             // TODO: remove duplicate (see vote_updater.php)
-            // FIXME: if a drink has 0 votes, show 0 instead of 1
-            $result = $db->query("SELECT drinks.name, drinks.drink_ID, COUNT(*) AS votes FROM drinks "
-                . "LEFT OUTER JOIN drinks_votes ON drinks_votes.drink_ID = drinks.drink_ID "
+            // FIXME: if a drink has 0 votes, show 0 instead of 1 - see vote_updater.php
+            $result = $db->query("SELECT drinks.name, drinks.drink_ID, COUNT(drinks_votes.drink_ID) AS votes "
+                . "FROM drinks LEFT OUTER JOIN drinks_votes ON drinks_votes.drink_ID = drinks.drink_ID "
                 . "GROUP BY drinks.drink_ID ORDER BY votes DESC;");
             if ($result->num_rows < 1) {
                 echo "<h5 class='text-secondary'><i>Nincs megjelenítendő adat</i></h5>";
                 exit();
             }
             echo "<table class='drinks-table' id='drinks-table'>";
+            $btnIndex = 0;
             while ($row = $result->fetch_row()) {
                 echo "<tr><td class='text-primary drinks-td'>" . $row[0] . "</td>";
                 $drinkId = $row[0];
@@ -58,11 +54,10 @@
                 echo "<td class='text-primary drinks-td'>" . $row[2] . "</td>";
 //                $paramJson = json_encode(array('userId' => $_SESSION['userId'], 'drinkId' => intval($row[1]));
                 echo "<td class='drinks-td'><button class='btn btn-sm btn-outline-success drinks-vote-btn' "
-                    . " id='drinks-plus-btn-" . $row[1] . "' type='button' disabled "
-                    . "onclick='addButtonClicked(" . $row[1] . ")'>+</button></td> ";
+                    . " id='drinks-plus-btn-" . $btnIndex . "' type='button' disabled >+</button></td>";
                 echo "<td class='drinks-td'><button class='btn btn-sm btn-outline-danger drinks-vote-btn' "
-                    . " id='drinks-minus-btn-" . $row[1] . "' type='button' onclick='removeButtonClicked($row[1])' "
-                    . "disabled>-</button></td>";
+                    . " id='drinks-minus-btn-" . $btnIndex . "' type='button' disabled>-</button></td>";
+                $btnIndex++;
             // TODO
 //                echo "<td class='drinks-td'><button class='btn btn-sm btn-outline-danger drinks-vote-btn' type='button' onclick='' disabled "
 //                    . ">Törlés</button></td></td>";

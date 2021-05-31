@@ -14,12 +14,16 @@ class DrinksVoteUpdater {
      */
     private constructor(interval: number = 3) {
         this._interval = interval;
-        window.setInterval(this.update, this._interval * 1000);
-        this.update();
     }
 
     set userId(value: number) {
         this._userID = value;
+        this.update();
+        window.setInterval(this.update, this._interval * 1000);
+    }
+
+    get userId() {
+        return this._userID;
     }
 
     get interval() {
@@ -27,13 +31,12 @@ class DrinksVoteUpdater {
     }
 
     /**
-     * @param value The number of seconds after an update should occur.
+     * @param value The number of seconds between updates.
      */
     set interval(value: number) {
         this._interval = value;
     }
 
-    // FIXME: sometimes the wrong button gets disabled
     update(): void {
         $.ajax({
             "url": "vote_updater.php",
@@ -41,7 +44,7 @@ class DrinksVoteUpdater {
             "timeout": 5000,
             "dataType": "json",
             "data": {
-                userId: this._userID
+                userId: DrinksVoteUpdater.instance.userId
             },
             "success": function (data: any) {
                 for (let i = 0; i < data.length; i++) {
@@ -49,8 +52,16 @@ class DrinksVoteUpdater {
                         document.querySelectorAll("tr")[i].querySelectorAll("td")[j - 1]
                             .innerHTML = data[i][j];
                     }
-                    document.getElementById(("drinks-plus-btn-" + data[i][0])).disabled = data[i][3];
-                    document.getElementById(("drinks-minus-btn-" + data[i][0])).disabled = data[i][4];
+                    document.getElementById(("drinks-plus-btn-" + i)).disabled = data[i][3];
+                    document.getElementById(("drinks-plus-btn-" + i)).onclick = function () {
+                        submitVote(DrinksVoteUpdater.instance.userId, data[i][0], VoteType.drinkAdd);
+                        DrinksVoteUpdater.instance.update();
+                    };
+                    document.getElementById(("drinks-minus-btn-" + i)).disabled = data[i][4];
+                    document.getElementById(("drinks-minus-btn-" + i)).onclick = function () {
+                        submitVote(DrinksVoteUpdater.instance.userId, data[i][0], VoteType.drinkRemove);
+                        DrinksVoteUpdater.instance.update();
+                    };
                 }
             },
             "error": function (err: any) {

@@ -11,13 +11,13 @@ function submitVote(userID, drinkID, action) {
         "timeout": 5000,
         "dataType": "json",
         "data": {
+            action: action,
             userId: userID,
-            drinkId: drinkID,
-            action: action
+            drinkId: drinkID
         },
         "success": function (data) {
             if (data.success) {
-                console.log("ok");
+                console.log(action == VoteType.drinkAdd ? "vote successfully saved" : "vote successfully removed");
             }
         },
         "error": function (err) {
