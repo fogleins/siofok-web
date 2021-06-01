@@ -32,7 +32,11 @@ class DrinksVoteUpdater {
             },
             "success": function (data) {
                 let table = document.getElementById("drinks-table");
-                document.getElementById("drinks-no-data").hidden = data.length != 0;
+                if (data.length == 0) {
+                    document.getElementById("drinks-no-data").hidden = false;
+                    return;
+                }
+                document.getElementById("drinks-no-data").hidden = true;
                 for (let i = 0; i < data.length; i++) {
                     let row;
                     if (i == table.rows.length) {
@@ -86,9 +90,18 @@ class DrinksVoteUpdater {
         });
     }
     addSuggestion() {
-        let suggestion = document.getElementById("drink-suggestion").value;
-        if (suggestion == null || suggestion === "") {
+        let suggestion = document.getElementById("drink-suggestion").value.trim();
+        if (suggestion == null || suggestion == "") {
+            showToast("Hiba", "Nem adtál meg értéket.");
             return;
+        }
+        let rows = document.getElementById("drinks-table").rows;
+        for (const row in rows) {
+            if (rows.hasOwnProperty(row) && rows[row].cells[0].textContent.toLowerCase() == suggestion.toLowerCase()) {
+                showToast("Hiba", `'${suggestion}' már szerepel a lehetőségek között, így most nem ` +
+                    "kerül hozzáadásra.", BootstrapColors.warning);
+                return;
+            }
         }
         $.ajax({
             "url": "vote_handler.php",
@@ -103,10 +116,12 @@ class DrinksVoteUpdater {
             "success": function (data) {
                 if (data.success) {
                     DrinksVoteUpdater.instance.update();
+                    showToast("Sikeres művelet", "Javaslatod rögzítésre került.");
                     console.log("suggestion successfully saved");
                 }
             },
             "error": function (err) {
+                showToast("Sikertelen művelet", "Javaslatod mentése során hiba lépett fel.", BootstrapColors.danger);
                 alert("error");
                 console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
             }

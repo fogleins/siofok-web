@@ -8,6 +8,7 @@
     <title>Italok</title>
 </head>
 <script src="jquery-3.6.0.min.js"></script>
+<script src="bootstrap.bundle.min.js"></script>
 <script src="scripts/js/scripts.js"></script> <!-- Used as button callback -->
 <script src="scripts/js/drinksVoteUpdater.js"></script>
 
@@ -38,9 +39,7 @@
     <?php
         $db = Utils::getDbObject();
         try {
-            // TODO: text field + button for adding a suggestion
             // TODO: remove duplicate (see vote_updater.php)
-            // FIXME: if a drink has 0 votes, show 0 instead of 1 - see vote_updater.php
             $result = $db->query("SELECT drinks.name, drinks.drink_ID, COUNT(drinks_votes.drink_ID) AS votes "
                 . "FROM drinks LEFT OUTER JOIN drinks_votes ON drinks_votes.drink_ID = drinks.drink_ID "
                 . "GROUP BY drinks.drink_ID ORDER BY votes DESC;");

@@ -5,6 +5,14 @@ var VoteType;
     VoteType[VoteType["drinkAddSuggestion"] = 2] = "drinkAddSuggestion";
     VoteType[VoteType["other"] = 3] = "other";
 })(VoteType || (VoteType = {}));
+var BootstrapColors;
+(function (BootstrapColors) {
+    BootstrapColors["primary"] = "#007aff";
+    BootstrapColors["secondary"] = "#6c757d";
+    BootstrapColors["success"] = "#198754";
+    BootstrapColors["warning"] = "#ffc107";
+    BootstrapColors["danger"] = "#dc3545";
+})(BootstrapColors || (BootstrapColors = {}));
 function submitVote(userID, drinkID, action) {
     $.ajax({
         "url": "vote_handler.php",
@@ -18,13 +26,45 @@ function submitVote(userID, drinkID, action) {
         },
         "success": function (data) {
             if (data.success) {
-                console.log(action == VoteType.drinkAdd ? "vote successfully saved" : "vote successfully removed");
+                if (action == VoteType.drinkAdd) {
+                    showToast("Sikeres művelet", "Szavazatod sikeresen rögzítésre került.");
+                    console.log("vote successfully saved");
+                }
+                else if (action == VoteType.drinkRemove) {
+                    showToast("Sikeres művelet", "Szavazatod sikeresen törlésre került.");
+                    console.log("vote successfully removed");
+                }
             }
         },
         "error": function (err) {
-            alert("error");
+            showToast("Hiba", "A művelet során hiba lépett fel.", BootstrapColors.danger);
             console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
         }
     });
+}
+function showToast(title, description, iconColor = BootstrapColors.primary) {
+    if (document.getElementById("toast") == null) {
+        let body = document.querySelector("body");
+        body.innerHTML += "<div class='toast' id='toast' role='alert' aria-live='assertive' aria-atomic='true'>" +
+            "  <div class='toast-header' id='toast-header'>" +
+            "    <svg class='bd-placeholder-img rounded me-2' aria-hidden='true' focusable='false' " +
+            "      width='15px' height='15px'>" +
+            `      <rect id='toast-icon' width='100%' height='100%' fill='${iconColor}'></rect>` +
+            "    </svg>" +
+            "    <strong class='me-auto' id='toast-header-content'></strong>" +
+            "    <small id='timestamp'></small>" +
+            "    <button type='button' class='btn-close' data-bs-dismiss='toast' aria-label='Close'></button>" +
+            "  </div>" +
+            "  <div class='toast-body' id='toast-body'></div>" +
+            "</div>";
+    }
+    document.getElementById("toast-header-content").textContent = title;
+    document.getElementById("toast-body").textContent = description;
+    document.getElementById("toast-icon").style.fill = iconColor;
+    let date = new Date(Date.now());
+    document.getElementById("timestamp").textContent = date.toLocaleTimeString("hu");
+    let toast = document.getElementById("toast");
+    toast.style.marginTop = (window.scrollY + Math.round(window.innerHeight / 10)).toString() + "px";
+    $('.toast').toast('show');
 }
 //# sourceMappingURL=scripts.js.map

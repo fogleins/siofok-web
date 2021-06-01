@@ -50,8 +50,12 @@ class DrinksVoteUpdater {
             },
             "success": function (data: any) {
                 let table: HTMLTableElement = document.getElementById("drinks-table") as HTMLTableElement;
-                // if there's no data to show, displays a text
-                document.getElementById("drinks-no-data").hidden = data.length != 0;
+                if (data.length == 0) {
+                    // if there's no data to show, displays a text
+                    document.getElementById("drinks-no-data").hidden = false;
+                    return;
+                }
+                document.getElementById("drinks-no-data").hidden = true;
                 for (let i = 0; i < data.length; i++) {
                     let row: HTMLTableRowElement;
                     // if a new row should be added
@@ -110,9 +114,20 @@ class DrinksVoteUpdater {
      * Adds a new drink.
      */
     addSuggestion() {
-        let suggestion: string = (document.getElementById("drink-suggestion") as HTMLInputElement).value;
-        if (suggestion == null || suggestion === "") {
+        let suggestion: string = (document.getElementById("drink-suggestion") as HTMLInputElement).value.trim();
+        if (suggestion == null || suggestion == "") {
+            showToast("Hiba", "Nem adtál meg értéket.");
             return;
+        }
+        let rows = (document.getElementById("drinks-table") as HTMLTableElement).rows;
+        // check if the suggested value already exists in the table
+        // if yes, the suggestion will not be saved
+        for (const row in rows) {
+            if (rows.hasOwnProperty(row) && rows[row].cells[0].textContent.toLowerCase() == suggestion.toLowerCase()) {
+                showToast("Hiba", `'${suggestion}' már szerepel a lehetőségek között, így most nem ` +
+                    "kerül hozzáadásra.", BootstrapColors.warning);
+                return;
+            }
         }
         $.ajax({
             "url": "vote_handler.php",
@@ -124,15 +139,16 @@ class DrinksVoteUpdater {
                 userId: DrinksVoteUpdater.instance.userId,
                 drinkName: suggestion
             },
-            // todo: handle success and error
             "success": function (data: any) {
                 if (data.success) {
                     DrinksVoteUpdater.instance.update();
+                    showToast("Sikeres művelet", "Javaslatod rögzítésre került.");
                     console.log("suggestion successfully saved");
                 }
             },
             "error": function (err: any) {
-                alert("error");
+                showToast("Sikertelen művelet", "Javaslatod mentése során hiba lépett fel.",
+                    BootstrapColors.danger);
                 console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
             }
         });

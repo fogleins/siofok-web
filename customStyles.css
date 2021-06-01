@@ -129,3 +129,11 @@ header {
     color: darkgrey;
     font-style: italic;
 }
+
+.toast {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 10vh;
+    margin-right: 1vw;
+}
