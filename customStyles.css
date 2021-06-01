@@ -101,6 +101,8 @@ header {
 }
 
 .drinks-vote-btn {
+    min-width: 3ch;
+    min-height: 3ch;
     width: 60%;
     height: 60%;
     font-size: 14pt;

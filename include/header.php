@@ -25,7 +25,8 @@
     // we redirect them to their profile (profile.php)
     if (isset($_SESSION['access_token'])) {
         $nameBtn = "<li><button type='button' class='btn btn-outline-primary me-2 nav-item' onclick='"
-            . 'window.location = "profile.php";' . "'>" . $_SESSION['givenName'] . "</button></li>";
+            . 'window.location = "profile.php";' . "' style='margin-right: 0.5rem'>" . $_SESSION['givenName']
+            . "</button></li>";
         echo $nameBtn;
     }
     echo "<li>";
