@@ -38,6 +38,8 @@ class DrinksVoteUpdater {
     }
 
     update(): void {
+        document.getElementById("drinks-subtitle").textContent
+            = `Az adatok ${DrinksVoteUpdater.instance.interval} másodpercenként automatikusan frissülnek`;
         $.ajax({
             "url": "vote_updater.php",
             "type": "GET",
@@ -125,6 +127,7 @@ class DrinksVoteUpdater {
             // todo: handle success and error
             "success": function (data: any) {
                 if (data.success) {
+                    DrinksVoteUpdater.instance.update();
                     console.log("suggestion successfully saved");
                 }
             },
@@ -133,6 +136,5 @@ class DrinksVoteUpdater {
                 console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
             }
         });
-        this.update();
     }
 }

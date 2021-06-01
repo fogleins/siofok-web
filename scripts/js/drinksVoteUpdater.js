@@ -20,6 +20,8 @@ class DrinksVoteUpdater {
         this._interval = value;
     }
     update() {
+        document.getElementById("drinks-subtitle").textContent
+            = `Az adatok ${DrinksVoteUpdater.instance.interval} másodpercenként automatikusan frissülnek`;
         $.ajax({
             "url": "vote_updater.php",
             "type": "GET",
@@ -100,6 +102,7 @@ class DrinksVoteUpdater {
             },
             "success": function (data) {
                 if (data.success) {
+                    DrinksVoteUpdater.instance.update();
                     console.log("suggestion successfully saved");
                 }
             },
@@ -108,7 +111,6 @@ class DrinksVoteUpdater {
                 console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
             }
         });
-        this.update();
     }
 }
 DrinksVoteUpdater._instance = new DrinksVoteUpdater();

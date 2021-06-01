@@ -121,3 +121,9 @@ header {
     margin-left: 1%;
     margin-right: 1%;
 }
+
+.text-subtitle {
+    margin-top: 3%;
+    color: darkgrey;
+    font-style: italic;
+}

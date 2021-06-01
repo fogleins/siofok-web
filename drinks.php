@@ -30,7 +30,10 @@
     }
 </script>
 <body onload="onLoad()">
-<h2 class='text-primary text-center h2-top-center-margin'>Italszavazás</h2>
+<div class="text-center h2-top-center-margin">
+    <h2 class='text-primary'>Italszavazás</h2>
+    <h6 id="drinks-subtitle" class='text-subtitle'></h6>
+</div>
 <div class="floating-div" id="votes-div">
     <?php
         $db = Utils::getDbObject();
