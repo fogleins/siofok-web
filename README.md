@@ -16,7 +16,7 @@
         <li>Bootstrap JS plugin</li>
     </ul>
 </ul>
-A file named (`config.php`) containing credentials for 
+A file named <code>config.php</code> containing credentials for 
 database- and Google login handling is needed in 
 the project root.
 
