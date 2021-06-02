@@ -37,10 +37,10 @@ class DrinksVoteUpdater {
         this._interval = value;
     }
 
-    update(): void {
+    async update() {
         document.getElementById("drinks-subtitle").textContent
             = `Az adatok ${DrinksVoteUpdater.instance.interval} másodpercenként automatikusan frissülnek`;
-        $.ajax({
+        return $.ajax({
             "url": "vote_updater.php",
             "type": "GET",
             "timeout": 5000,
@@ -113,7 +113,12 @@ class DrinksVoteUpdater {
     /**
      * Adds a new drink.
      */
-    addSuggestion() {
+    async addSuggestion() {
+        // update the table to make sure that it contains the correct data, so we can check if the suggestion already
+        // exists in the table (this update call is not strictly necessary, but secures that we don't add an item
+        // that already exists in the table even if the user changed the content using the in-browser console)
+        await this.update();
+
         let suggestion: string = (document.getElementById("drink-suggestion") as HTMLInputElement).value.trim();
         if (suggestion == null || suggestion == "") {
             showToast("Hiba", "Nem adtál meg értéket.");
