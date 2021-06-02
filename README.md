@@ -9,9 +9,14 @@
     </ul>
     <li>MariaDB or MySQL</li>
     <li>TypeScript compiler</li>
-    <li>Bootstrap CSS</li>
+    <li>jQuery</li>
+    <li>Bootstrap</li>
+    <ul>
+        <li>Bootstrap 5 stylesheets</li>
+        <li>Bootstrap JS plugin</li>
+    </ul>
 </ul>
-A file named `config.php` containing credentials for 
+A file named (`config.php`) containing credentials for 
 database- and Google login handling is needed in 
 the project root.
 
