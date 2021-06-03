@@ -9,6 +9,7 @@
 </head>
 <script src="jquery-3.6.0.min.js"></script>
 <script src="bootstrap.bundle.min.js"></script>
+<script src="scripts/js/toast.js"></script>
 <script src="scripts/js/scripts.js"></script> <!-- Used as button callback -->
 <script src="scripts/js/drinksVoteUpdater.js"></script>
 
@@ -31,6 +32,13 @@
     }
 </script>
 <body onload="onLoad()">
+<!-- div for toasts -->
+<div aria-live="polite" aria-atomic="true" class="position-fixed" id="toasts-parent">
+    <!-- - `.toast-container` for spacing between toasts -->
+    <!-- - `.position-absolute`, `top-0` & `end-0` to position the toasts in the upper right corner -->
+    <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
+    <div class="toast-container position-absolute top-0 end-0 p-3" id="toasts"></div>
+</div>
 <div class="text-center h2-top-center-margin">
     <h2 class='text-primary'>Italszavazás</h2>
     <h6 id="drinks-subtitle" class='text-subtitle'></h6>

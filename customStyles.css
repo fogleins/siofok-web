@@ -130,10 +130,11 @@ header {
     font-style: italic;
 }
 
-.toast {
-    position: absolute;
+#toasts-parent {
+    position: fixed;
     top: 0;
     right: 0;
+    min-width: 300px;
     margin-top: 10vh;
-    margin-right: 1vw;
+    margin-right: 0.5vw;
 }

@@ -121,7 +121,7 @@ class DrinksVoteUpdater {
 
         let suggestion: string = (document.getElementById("drink-suggestion") as HTMLInputElement).value.trim();
         if (suggestion == null || suggestion == "") {
-            showToast("Hiba", "Nem adtál meg értéket.");
+            Toast.showToast("Hiba", "Nem adtál meg értéket.");
             return;
         }
         let rows = (document.getElementById("drinks-table") as HTMLTableElement).rows;
@@ -129,7 +129,7 @@ class DrinksVoteUpdater {
         // if yes, the suggestion will not be saved
         for (const row in rows) {
             if (rows.hasOwnProperty(row) && rows[row].cells[0].textContent.toLowerCase() == suggestion.toLowerCase()) {
-                showToast("Hiba", `'${suggestion}' már szerepel a lehetőségek között, így most nem ` +
+                Toast.showToast("Hiba", `'${suggestion}' már szerepel a lehetőségek között, így most nem ` +
                     "kerül hozzáadásra.", BootstrapColors.warning);
                 return;
             }
@@ -147,12 +147,12 @@ class DrinksVoteUpdater {
             "success": function (data: any) {
                 if (data.success) {
                     DrinksVoteUpdater.instance.update();
-                    showToast("Sikeres művelet", "Javaslatod rögzítésre került.");
+                    Toast.showToast("Sikeres művelet", "Javaslatod rögzítésre került.");
                     console.log("suggestion successfully saved");
                 }
             },
             "error": function (err: any) {
-                showToast("Sikertelen művelet", "Javaslatod mentése során hiba lépett fel.",
+                Toast.showToast("Sikertelen művelet", "Javaslatod mentése során hiba lépett fel.",
                     BootstrapColors.danger);
                 console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
             }
