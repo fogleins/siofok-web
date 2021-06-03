@@ -105,14 +105,14 @@ class DrinksVoteUpdater {
             yield this.update();
             let suggestion = document.getElementById("drink-suggestion").value.trim();
             if (suggestion == null || suggestion == "") {
-                Toast.showToast("Hiba", "Nem adtál meg értéket.");
+                Toast.showToast("Hiba", "Nem adtál meg értéket.", BootstrapColors.warning);
                 return;
             }
             let rows = document.getElementById("drinks-table").rows;
             for (const row in rows) {
                 if (rows.hasOwnProperty(row) && rows[row].cells[0].textContent.toLowerCase() == suggestion.toLowerCase()) {
-                    Toast.showToast("Hiba", `'${suggestion}' már szerepel a lehetőségek között, így most nem ` +
-                        "kerül hozzáadásra.", BootstrapColors.warning);
+                    Toast.showToast("Hiba", `'${suggestion}' már szerepel a lehetőségek között, így most ` +
+                        `nem kerül hozzáadásra.`, BootstrapColors.warning);
                     return;
                 }
             }
@@ -129,7 +129,7 @@ class DrinksVoteUpdater {
                 "success": function (data) {
                     if (data.success) {
                         DrinksVoteUpdater.instance.update();
-                        Toast.showToast("Sikeres művelet", "Javaslatod rögzítésre került.");
+                        Toast.showToast("Sikeres művelet", "Javaslatod rögzítésre került.", BootstrapColors.success);
                         console.log("suggestion successfully saved");
                     }
                 },

@@ -27,10 +27,12 @@ function submitVote(userID: number, drinkID: number, action: VoteType): void {
         "success": function (data: any) {
             if (data.success) {
                 if (action == VoteType.drinkAdd) {
-                    Toast.showToast("Sikeres művelet", "Szavazatod sikeresen rögzítésre került.");
+                    Toast.showToast("Sikeres művelet", "Szavazatod sikeresen rögzítésre került.",
+                        BootstrapColors.success);
                     console.log("vote successfully saved");
                 } else if (action == VoteType.drinkRemove) {
-                    Toast.showToast("Sikeres művelet", "Szavazatod sikeresen törlésre került.");
+                    Toast.showToast("Sikeres művelet", "Szavazatod sikeresen törlésre került.",
+                        BootstrapColors.success);
                     console.log("vote successfully removed");
                 }
             }
