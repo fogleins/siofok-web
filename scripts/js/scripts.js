@@ -42,4 +42,16 @@ function submitVote(userID, drinkID, action) {
         }
     });
 }
+$(document).ready(function () {
+    let navLinks = document.getElementsByClassName("nav-link");
+    for (let i = 0; i < navLinks.length; i++) {
+        let navLink = navLinks[i];
+        if (navLink.href == window.location.href) {
+            navLink.classList.add("active", "text-primary");
+        }
+        else if (navLink.classList.contains("active")) {
+            navLink.classList.remove("active");
+        }
+    }
+});
 //# sourceMappingURL=scripts.js.map

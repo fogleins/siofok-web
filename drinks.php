@@ -7,14 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Italok</title>
 </head>
-<script src="jquery-3.6.0.min.js"></script>
-<script src="bootstrap.bundle.min.js"></script>
+<!-- jQuery, the bootstrap js api, and scripts/js/scripts.js will be included by including 'include/header.php' below -->
 <script src="scripts/js/toast.js"></script>
-<script src="scripts/js/scripts.js"></script> <!-- Used as button callback -->
 <script src="scripts/js/drinksVoteUpdater.js"></script>
 
 <?php
-    include "include/includes.html";
     include_once "utils.php";
     session_start();
     include "include/header.php";

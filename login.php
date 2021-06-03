@@ -14,7 +14,6 @@
     <title>Bejelentkezés</title>
 </head>
 <body>
-<?php include "include/header.php"; ?>
 <?php
     header("Location: " . $loginURL);
     exit();
