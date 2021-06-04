@@ -43,39 +43,10 @@
 </div>
 <div class="floating-div col-sm-8 col-lg-3" id="votes-div">
     <?php
-        $db = Utils::getDbObject();
-        try {
-            // TODO: remove duplicate (see vote_updater.php)
-            $result = $db->query("SELECT drinks.name, drinks.drink_ID, COUNT(drinks_votes.drink_ID) AS votes "
-                . "FROM drinks LEFT OUTER JOIN drinks_votes ON drinks_votes.drink_ID = drinks.drink_ID "
-                . "GROUP BY drinks.drink_ID ORDER BY votes DESC;");
-
             echo "<h5 class='text-center text-secondary' style='margin-bottom: 8%' id='drinks-no-data' hidden> "
                 . "<i>Nincs megjelenítendő adat</i></h5>";
             include "include/vote_suggestion_control.html";
-            echo "<table class='drinks-table' id='drinks-table'>";
-            $btnIndex = 0;
-            while ($row = $result->fetch_row()) {
-                echo "<tr><td class='text-primary drinks-td'>" . $row[0] . "</td>";
-                $drinkId = $row[0];
-                $shouldCloseList = true;
-                echo "<td class='text-primary drinks-td'>" . $row[2] . "</td>";
-//                $paramJson = json_encode(array('userId' => $_SESSION['userId'], 'drinkId' => intval($row[1]));
-                echo "<td class='drinks-td'><button class='btn btn-sm btn-outline-success drinks-vote-btn' "
-                    . " id='drinks-plus-btn-" . $btnIndex . "' type='button' disabled >+</button></td>";
-                echo "<td class='drinks-td'><button class='btn btn-sm btn-outline-danger drinks-vote-btn' "
-                    . " id='drinks-minus-btn-" . $btnIndex . "' type='button' disabled>-</button></td>";
-                $btnIndex++;
-            // TODO
-//                echo "<td class='drinks-td'><button class='btn btn-sm btn-outline-danger drinks-vote-btn' type='button' onclick='' disabled "
-//                    . ">Törlés</button></td></td>";
-            }
-            echo "</table>";
-        } catch (Exception $exception) {
-            Utils::logEvent(LogType::ERROR(), $exception->getMessage());
-        } finally {
-            $db->close();
-        }
+            echo "<table class='drinks-table' id='drinks-table'></table>";
     ?>
 </div>
 <?php include "include/footer.php"; ?>
