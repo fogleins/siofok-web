@@ -10,7 +10,6 @@
     animation-duration: 1s;
     margin: 5% auto;
     alignment: center;
-    max-width: 50%;
 }
 
 .playlist-div {
@@ -30,10 +29,6 @@
 
 .list-item {
     font-size: 18px;
-}
-
-header {
-    background: white;
 }
 
 .footer {
@@ -85,14 +80,14 @@ header {
     margin-left: auto;
     margin-right: auto;
     border-collapse: separate;
-    width: 40%;
+    min-width: 40%;
     /*table-layout: fixed;*/
 }
 
 .drinks-th, .drinks-td {
     padding: 8px;
     text-align: center;
-    width: 10%;
+    min-width: 10%;
     font-size: 16pt;
     /* handle long text */
     /*overflow: hidden;*/
@@ -119,7 +114,6 @@ header {
 }
 
 #drink-suggestion {
-    max-width: 30%;
     margin-left: 1%;
     margin-right: 1%;
 }
@@ -135,6 +129,6 @@ header {
     top: 0;
     right: 0;
     min-width: 300px;
-    margin-top: 10vh;
+    margin-top: 10vh; /* TODO: ld kicsinyítés */
     margin-right: 0.5vw;
 }

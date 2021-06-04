@@ -36,11 +36,12 @@
     <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
     <div class="toast-container position-absolute top-0 end-0 p-3" id="toasts"></div>
 </div>
+<div class="wrapper-div">
 <div class="text-center h2-top-center-margin">
     <h2 class='text-primary'>Italszavazás</h2>
     <h6 id="drinks-subtitle" class='text-subtitle'></h6>
 </div>
-<div class="floating-div" id="votes-div">
+<div class="floating-div col-sm-8 col-lg-3" id="votes-div">
     <?php
         $db = Utils::getDbObject();
         try {
@@ -76,6 +77,8 @@
             $db->close();
         }
     ?>
+</div>
+<?php include "include/footer.php"; ?>
 </div>
 </body>
 </html>
