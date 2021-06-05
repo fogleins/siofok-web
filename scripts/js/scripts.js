@@ -43,11 +43,14 @@ function submitVote(userID, drinkID, action) {
     });
 }
 $(document).ready(function () {
-    let navLinks = document.getElementsByClassName("nav-link");
+    let navLinks = document.querySelectorAll(".nav-link, .dropdown-item");
     for (let i = 0; i < navLinks.length; i++) {
         let navLink = navLinks[i];
         if (navLink.href == window.location.href) {
-            navLink.classList.add("active", "text-primary");
+            navLink.classList.add("active");
+            if (navLink.classList.contains("nav-link")) {
+                navLink.classList.add("text-primary");
+            }
         }
         else if (navLink.classList.contains("active")) {
             navLink.classList.remove("active");

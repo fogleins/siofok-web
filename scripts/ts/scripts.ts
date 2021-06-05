@@ -48,11 +48,15 @@ function submitVote(userID: number, drinkID: number, action: VoteType): void {
  * Sets the page's link in the header active when a page loads.
  */
 $(document).ready(function () {
-    let navLinks = document.getElementsByClassName("nav-link");
+    // set the active state for nav-links and dropdown-items as needed
+    let navLinks = document.querySelectorAll(".nav-link, .dropdown-item");
     for (let i = 0; i < navLinks.length; i++) {
         let navLink: HTMLLinkElement = navLinks[i] as HTMLLinkElement;
         if (navLink.href == window.location.href) {
-            navLink.classList.add("active", "text-primary");
+            navLink.classList.add("active");
+            if (navLink.classList.contains("nav-link")) {
+                navLink.classList.add("text-primary");
+            }
         } else if (navLink.classList.contains("active")) {
             navLink.classList.remove("active");
         }
