@@ -13,6 +13,7 @@ var BootstrapColors;
     BootstrapColors["warning"] = "#ffc107";
     BootstrapColors["danger"] = "#dc3545";
 })(BootstrapColors || (BootstrapColors = {}));
+let USER_ID = null;
 function submitVote(userID, drinkID, action) {
     $.ajax({
         "url": "vote_handler.php",
@@ -57,4 +58,57 @@ $(document).ready(function () {
         }
     }
 });
+function loadProfileData() {
+    $.ajax({
+        "url": "profile_data.php",
+        "type": "GET",
+        "timeout": 5000,
+        "dataType": "json",
+        "data": {},
+        "success": function (data) {
+            if (data.success) {
+                let table = document.getElementById("profile-data");
+                let i = 0;
+                for (const dataKey in data) {
+                    if (data.hasOwnProperty(dataKey) && dataKey != "success") {
+                        let row = table.insertRow(i);
+                        for (let j = 0; j < 2; j++) {
+                            let cell = row.insertCell(j);
+                            if (j == 0) {
+                                cell.classList.add("text-primary");
+                                cell.innerHTML = getUiTextForJsonKey(dataKey);
+                            }
+                            else if (j == 1) {
+                                cell.classList.add("text-secondary");
+                                if (data[dataKey].length == 0) {
+                                    cell.innerHTML = '-';
+                                }
+                                else if (dataKey == "groups" && data[dataKey].length > 1) {
+                                    cell.innerHTML = data[dataKey].join(", ");
+                                }
+                                else {
+                                    cell.innerHTML = data[dataKey];
+                                }
+                            }
+                        }
+                        i++;
+                    }
+                }
+            }
+        },
+        "error": function (err) {
+            console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
+        }
+    });
+}
+function getUiTextForJsonKey(jsonKey) {
+    switch (jsonKey) {
+        case "firstLogin":
+            return "Első bejelentkezés";
+        case "lastLogin":
+            return "Utolsó bejelentkezés";
+        case "groups":
+            return "Felhasználói csoportok";
+    }
+}
 //# sourceMappingURL=scripts.js.map
