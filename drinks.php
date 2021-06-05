@@ -43,10 +43,10 @@
 </div>
 <div class="floating-div col-sm-8 col-lg-3" id="votes-div">
     <?php
-            echo "<h5 class='text-center text-secondary' style='margin-bottom: 8%' id='drinks-no-data' hidden> "
-                . "<i>Nincs megjelenítendő adat</i></h5>";
-            include "include/vote_suggestion_control.html";
-            echo "<table class='drinks-table' id='drinks-table'></table>";
+        echo "<h5 class='text-center text-secondary' style='margin-bottom: 8%' id='drinks-no-data' hidden> "
+            . "<i>Nincs megjelenítendő adat</i></h5>";
+        include "include/vote_suggestion_control.html";
+        echo "<table class='table table-hover' id='drinks-table'></table>";
     ?>
 </div>
 <?php include "include/footer.php"; ?>
