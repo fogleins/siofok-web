@@ -57,4 +57,37 @@ class Utils
     {
         return new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
     }
+
+    /**
+     * Checks whether a user has permission to access a given page.
+     * @param string $requiredRole The name of the required role.
+     * @return bool True, if the user has permission to access the page, false otherwise.
+     */
+    public static function requireRole(string $requiredRole): bool {
+        $db = Utils::getDbObject();
+        $result = null;
+        $roles = array();
+        try {
+            $result = $db->query("SELECT usergroup.name FROM users "
+                . " LEFT OUTER JOIN user_usergroup ON user_usergroup.user_ID = users.user_ID "
+                . " LEFT OUTER JOIN usergroup ON usergroup.usergroup_ID = user_usergroup.usergroup_ID "
+                . " WHERE users.user_ID = " . $_SESSION['userId'] . " ORDER BY users.user_ID");
+            while ($row = $result->fetch_row()) {
+                array_push($roles, $row[0]);
+            }
+        } catch (Exception $exception) {
+            Utils::logEvent(LogType::ERROR(), "Error in Utils::requireRole(): " . $exception->getMessage());
+        } finally {
+            $db->close();
+        }
+        // banned users are not allowed to access anything that's not public
+        if (in_array("banned", $roles)) {
+            return false;
+        }
+        // users with admin privileges have access to everything
+        else if (in_array("admin", $roles)) {
+            return true;
+        }
+        return in_array($requiredRole, $roles);
+    }
 }
