@@ -5,7 +5,13 @@
         header("Location: login.php");
         exit();
     }
-    // TODO only allow users with admin privileges
+    // allow only users with admin privileges
+    include "utils.php";
+    if (!Utils::requireRole("admin")) {
+        include "include/403.php";
+        http_response_code(403);
+        die();
+    }
 ?>
 
 <!doctype html>
@@ -20,12 +26,11 @@
 </head>
 <body onload="Admin.loadUserManagement()">
 <?php
-    include "utils.php";
     include "include/header.php";
     echo "<h2 class='text-primary text-center h2-top-center-margin'>Adminisztáció</h2>";
 ?>
 <div class="wrapper-div">
-    <div class="floating-div col-sm-2 col-lg-10">
+    <div class="floating-div col-sm-2 col-lg-6">
         <h3 class="text-secondary">Felhasználók kezelése</h3>
         <div class="scrollable-table-container" id="users-container">
             <table class="table table-striped table-hover" id="user-management"></table>
