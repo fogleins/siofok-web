@@ -31,7 +31,7 @@
                         <li><a class="dropdown-item" href="#">Résztvevők</a></li>
                         <li><a class="dropdown-item" href="faq.php">GYIK</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Admin</a></li>
+                        <li><a class="dropdown-item" href="admin.php">Admin</a></li>
                     </ul>
                 </li>
             </ul>

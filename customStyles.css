@@ -81,6 +81,7 @@
     text-align: center;
     min-width: 10%;
     font-size: 16pt;
+    vertical-align: middle;
     /* handle long text */
     /*overflow: hidden;*/
     /*white-space: nowrap;*/
@@ -123,4 +124,14 @@
     min-width: 300px;
     margin-top: 10vh; /* TODO: ld kicsinyítés */
     margin-right: 0.5vw;
+}
+
+/* For admin.php's logs table */
+.log > td {
+    vertical-align: middle;
+}
+
+.scrollable-table-container {
+    max-height: 80vh;
+    overflow-y: scroll;
 }
