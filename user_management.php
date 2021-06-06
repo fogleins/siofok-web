@@ -5,7 +5,7 @@
     try {
         $results = array();
         if (!$db) {
-            Utils::logEvent(LogType::ERROR(), "Cannot get db object in vote_updater.php");
+            Utils::logEvent(LogType::ERROR(), "Cannot get db object in user_management.php");
         }
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         // query all drinks ordered by vote count
@@ -37,7 +37,7 @@
         $results["success"] = true;
         echo json_encode($results);
     } catch (Exception $exception) {
-        Utils::logEvent(LogType::ERROR(), "Error in vote_updater.php: " . $exception->getMessage());
+        Utils::logEvent(LogType::ERROR(), "Error in user_management.php: " . $exception->getMessage());
     } finally {
         $db->close();
     }
