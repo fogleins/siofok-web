@@ -10,11 +10,18 @@
     <li>MariaDB or MySQL</li>
     <li>TypeScript compiler</li>
     <li>jQuery</li>
+    <ul>
+        <li>jQuery ui autocomplete module</li>
+    </ul>
     <li>Bootstrap</li>
     <ul>
         <li>Bootstrap 5 stylesheets</li>
         <li>Bootstrap JS plugin</li>
     </ul>
+    <li><a href="https://goodies.pixabay.com/jquery/tag-editor/demo.html">
+            Pixabay's tag editor jQuery plugin</a>
+    </li>
+    <li><a href="https://github.com/accursoft/caret">Accursoft's caret jQuery plugin</a> </li>
 </ul>
 A file named <code>config.php</code> containing credentials for 
 database- and Google login handling is needed in 

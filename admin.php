@@ -22,13 +22,18 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Adminisztráció</title>
-    <script src="scripts/js/admin.js"></script>
+    <link rel="stylesheet" href="include/tagEditor/jquery-ui.min.css">
+    <link rel="stylesheet" href="include/tagEditor/jquery.tag-editor.css">
 </head>
-<body onload="Admin.loadUserManagement()">
+<body>
 <?php
     include "include/header.php";
     echo "<h2 class='text-primary text-center h2-top-center-margin'>Adminisztáció</h2>";
 ?>
+<script src="include/tagEditor/jquery-ui.min.js"></script>
+<script src="include/tagEditor/jquery.tag-editor.min.js"></script>
+<script src="include/tagEditor/jquery.caret.min.js"></script>
+<script src="scripts/js/admin.js"></script>
 <div class="wrapper-div">
     <div class="floating-div col-sm-2 col-lg-6">
         <h3 class="text-secondary">Felhasználók kezelése</h3>
@@ -58,6 +63,31 @@
         </div>
     </div>
     <?php include "include/footer.php"; ?>
+</div>
+
+<div class="modal fade" id="userManagementModal" tabindex="-1" aria-labelledby="userManagementModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userManagementModalLabel">Jogosultságkezelés</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        onclick="Admin.destroyTagEditor()"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="roles" class="col-form-label">Jogosultságok:</label>
+                        <input type="text" class="form-control" id="roles">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        onclick="Admin.destroyTagEditor()">Bezárás</button>
+                <button type="button" class="btn btn-primary">Mentés</button>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
