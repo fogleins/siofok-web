@@ -35,7 +35,7 @@
 <script src="include/tagEditor/jquery.caret.min.js"></script>
 <script src="scripts/js/admin.js"></script>
 <div class="wrapper-div">
-    <div class="floating-div col-sm-2 col-lg-6">
+    <div class="floating-div col-sm-10 col-lg-6">
         <h3 class="text-secondary">Felhasználók kezelése</h3>
         <div class="scrollable-table-container" id="users-container">
             <table class="table table-striped table-hover" id="user-management"></table>
