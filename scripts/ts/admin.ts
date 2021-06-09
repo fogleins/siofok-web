@@ -7,10 +7,11 @@ namespace Admin {
         removeRole
     }
 
-    // an array of roles a user can have
+    // a list of roles a user can have
     let availableRoles: JSON;
     let rolesForAutocomplete: string[] = [];
     let usersTags: string[] = [];
+    let changedRoles: Object[] = [];
 
     function loadUserManagement() {
         $.ajax({
@@ -18,15 +19,14 @@ namespace Admin {
             "type": "GET",
             "timeout": 5000,
             "dataType": "json",
-            "data": {
-                action: Action.userDataQuery
-            },
+            "data": { },
             "success": function (data: any) {
                 if (data.success) {
                     availableRoles = data["availableRoles"];
                     for (const availableRolesKey in availableRoles) {
                         if (availableRoles.hasOwnProperty(availableRolesKey)) {
-                            rolesForAutocomplete.push(availableRoles[availableRolesKey]["label"]);
+                            rolesForAutocomplete.push(availableRolesKey);
+                            availableRoles[availableRolesKey] = parseInt(availableRoles[availableRolesKey], 10);
                         }
                     }
                     let table: HTMLTableElement = document.getElementById("user-management") as HTMLTableElement;
@@ -47,7 +47,7 @@ namespace Admin {
                         }
                         // if the user has no roles (if we didn't add a cell here, there would be only 2 cells in this row)
                         if (!data[i]["roles"]) {
-                            row.insertCell(2).textContent = "-";
+                            row.insertCell(2);
                         }
                         let cell: HTMLTableCellElement = row.insertCell(3);
                         let button = document.createElement("button");
@@ -63,7 +63,10 @@ namespace Admin {
                             usersTags = [];
                             usersTags = table.querySelectorAll("tr")[i + 1].cells[2].textContent
                                 .split(", ");
-                            $("#roles").tagEditor({
+                            let modal = document.getElementById("userManagementModal");
+                            let userId = parseInt(modal.getAttribute("data-bs-userId"), 10);
+                            let roles = $("#roles")
+                            roles.tagEditor({
                                 autocomplete: {
                                     delay: 0,
                                     postition: { collision: 'flip' },
@@ -71,7 +74,38 @@ namespace Admin {
                                 },
                                 forceLowercase: false,
                                 placeholder: "Adj meg jogosultságokat...",
-                                initialTags: usersTags
+                                initialTags: usersTags,
+                                beforeTagSave: function(field, editor, tags, tag, val) {
+                                    if (availableRoles[val]) {
+                                        changedRoles.push({
+                                            action: Action.addRole,
+                                            userId: userId,
+                                            roleId: availableRoles[val]
+                                        });
+                                    } else {
+                                        // remove invalid tag
+                                        console.log("invalid tag: " + val);
+                                        window.setTimeout(function () {
+                                            roles.tagEditor("removeTag", val);
+                                        }, 10);
+                                    }
+                                },
+                                beforeTagDelete: function (field, editor, tags, val) {
+                                    // in the beforeTagSave event we remove the tags if they are not valid (e.g. they
+                                    // are not in the json), and that operation also triggers this event, and we don't
+                                    // want to add only the userId and action to the changedRoles array, therefore we
+                                    // need this if statement
+                                    if (availableRoles[val]) {
+                                        changedRoles.push({
+                                            action: Action.removeRole,
+                                            userId: userId,
+                                            roleId: availableRoles[val]
+                                        });
+                                    } else {
+                                        // feedback on the console
+                                        console.log("deleting invalid tag")
+                                    }
+                                }
                             });
                         });
                         button.id = "modal" + i;
@@ -96,56 +130,52 @@ namespace Admin {
             // Extract info from data-bs-* attributes
             let userFullName = button.getAttribute('data-bs-user');
             let userId = button.getAttribute("data-bs-userId");
+            modal.setAttribute("data-bs-userId", userId);
             // Update the modal's content.
             let modalTitle = document.getElementById('userManagementModalLabel');
             modalTitle.textContent = userFullName + " [" + userId + "] jogosultságainak kezelése";
         })
+
+        $(".modal-close").click(function () {
+            // TODO: temporarily store changes for the user's role, because after closing and reopening the modal,
+            //  only the already saved roles show up
+            $("#roles").tagEditor("destroy");
+        })
+
+        $("#modal-save").click(function () {
+            if (changedRoles.length != 0) {
+                $.ajax({
+                    url: "user_management.php",
+                    type: "POST",
+                    timeout: 5000,
+                    dataType: "json",
+                    data: {
+                        action: Action.modifyRoles,
+                        changes: changedRoles
+                    },
+                    success: function (data: any) {
+                        if (data.success) {
+                            // todo: reload table data where needed
+                            Toast.showToast("Sikeres művelet", "A módosítások mentése sikeres volt.",
+                                BootstrapColors.success);
+                        } else {
+                            Toast.showToast("Hiba", "Nem minden módosítást sikerült menteni. " +
+                                "Részletek a rendszernaplóban találhatók.", BootstrapColors.danger);
+                        }
+                    },
+                    error: function (err: any) {
+                        console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
+                        Toast.showToast("Hiba", "Hiba az AJAX kérés során. Részletek a konzolon.",
+                            BootstrapColors.danger);
+                    }
+                });
+                $("#roles").tagEditor("destroy");
+            }
+        })
+
+        $("#dismiss-changes").click(function () {
+            $("#roles").tagEditor("destroy");
+            changedRoles = [];
+        })
     });
-
-    /**
-     * Tag editor has to be destroyed when switching between users, this method is called when closing the modal.
-     */
-    export function destroyTagEditor() {
-        $("#roles").tagEditor("destroy");
-    }
-
-    // export function testJsonRequest() {
-    //     let changes = [
-    //         {
-    //             role: "admin",
-    //             action: Action.removeRole,
-    //             user: 8
-    //         },
-    //         {
-    //             role: "participant",
-    //             action: Action.addRole,
-    //             user: 8
-    //         },
-    //         {
-    //             role: "participant",
-    //             action: Action.addRole,
-    //             user: 9
-    //         },
-    //     ];
-    //     $.ajax({
-    //         "url": "user_management.php",
-    //         "type": "GET",
-    //         "timeout": 5000,
-    //         "dataType": "json",
-    //         "data": {
-    //             action: Action.modifyRoles,
-    //             changes: JSON.stringify(changes)
-    //         },
-    //         "success": function (data: any) {
-    //             if (data.success) {
-    //                 console.log("success" + JSON.stringify(data));
-    //             } else {
-    //                 console.log("success value not set" + JSON.stringify(data))
-    //             }
-    //         },
-    //         "error": function (err: any) {
-    //             console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
-    //         }
-    //     });
-    // }
 }

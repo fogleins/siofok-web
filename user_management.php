@@ -3,8 +3,7 @@
 
     $db = Utils::getDbObject();
     try {
-        $action = $_GET["action"];
-        if ($action == 0) {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $results = array();
             if (!$db) {
                 Utils::logEvent(LogType::ERROR(), "Cannot get db object in user_management.php");
@@ -34,28 +33,39 @@
                 }
                 array_push($currentUserRoles, $row[2]);
             }
+            if (!isset($currentUserData["roles"])) {
+                $currentUserData["roles"] = $currentUserRoles;
+            }
             array_push($results, $currentUserData);
             $results["length"] = $jsonLength;
             $availableRoles = array();
             $result = $db->query("SELECT name, usergroup_ID FROM usergroup");
             while ($row = $result->fetch_row()) {
-//                $availableRoles[$row[0]] = $row[1];
-                array_push($availableRoles, array("label" => $row[0], "value" => $row[1]));
+                $availableRoles[$row[0]] = $row[1];
+//                array_push($availableRoles, array("label" => $row[0], "value" => $row[1]));
             }
             $results["availableRoles"] = $availableRoles;
             $results["success"] = true;
             echo json_encode($results);
-        } else if ($action == 1) {
-            $arr = json_decode($_GET["changes"], true);
-            // TODO
-            foreach ($arr as &$element) {
+        } else if ($_POST["action"] == 1) {
+            $successCount = 0;
+            foreach ($_POST["changes"] as &$element) {
+                $success = false;
                 if ($element["action"] == 2) {
-//                    $success = $db->query("INSERT INTO user_usergroup VALUES ");
-                    echo json_encode(array("success" => true));
+                    $success = $db->query("INSERT INTO user_usergroup VALUES (" . $element["userId"]
+                        . ", " . $element["roleId"] . ")");
                 } else if ($element["action"] == 3) {
-                    echo json_encode(array("success" => true));
+                    $success = $db->query("DELETE FROM user_usergroup WHERE user_ID = " . $element["userId"]
+                        . " AND usergroup_ID = " . $element["roleId"]);
+                }
+                if ($success) {
+                    $successCount++;
+                } else {
+                    Utils::logEvent(LogType::ERROR(), "Cannot modify roles for values { action: 
+                        {$element['action']}, userId: {$element['userId']}, roleId: {$element['roleId']}");
                 }
             }
+            echo json_encode(array("success" => $successCount == sizeof($_POST["changes"])));
         }
     } catch (Exception $exception) {
         Utils::logEvent(LogType::ERROR(), "Error in user_management.php: " . $exception->getMessage());

@@ -33,7 +33,13 @@
 <script src="include/tagEditor/jquery-ui.min.js"></script>
 <script src="include/tagEditor/jquery.tag-editor.min.js"></script>
 <script src="include/tagEditor/jquery.caret.min.js"></script>
+<script src="scripts/js/toast.js"></script>
 <script src="scripts/js/admin.js"></script>
+<!-- toasts begin -->
+<div aria-live="polite" aria-atomic="true" class="position-fixed" id="toasts-parent">
+    <div class="toast-container position-absolute top-0 end-0 p-3" id="toasts"></div>
+</div>
+<!-- toasts end -->
 <div class="wrapper-div">
     <div class="floating-div col-sm-10 col-lg-6">
         <h3 class="text-secondary">Felhasználók kezelése</h3>
@@ -70,8 +76,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="userManagementModalLabel">Jogosultságkezelés</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                        onclick="Admin.destroyTagEditor()"></button>
+                <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
@@ -82,9 +87,10 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                        onclick="Admin.destroyTagEditor()">Bezárás</button>
-                <button type="button" class="btn btn-primary">Mentés</button>
+                <button type="button" class="btn btn-outline-danger" id="dismiss-changes">
+                    Nem mentett módosítások elvetése</button>
+                <button type="button" class="btn btn-outline-secondary modal-close" data-bs-dismiss="modal">Bezárás</button>
+                <button type="button" class="btn btn-primary" id="modal-save" data-bs-dismiss="modal">Mentés</button>
             </div>
         </div>
     </div>
