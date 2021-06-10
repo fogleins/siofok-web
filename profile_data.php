@@ -43,6 +43,18 @@
             $results['lastLogin'] = $lastLogin;
             $stmt->free_result();
         }
+        // get the user's activities
+        $activities = array();
+        $stmt = $db->prepare("SELECT timestamp, description FROM log WHERE log.user_ID = ? ORDER BY timestamp DESC");
+        $stmt->bind_param("i", $_SESSION['userId']);
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            while ($activity = $result->fetch_row()) {
+                array_push($activities, $activity);
+            }
+            $stmt->free_result();
+        }
+        $results['activities'] = $activities;
         $results["success"] = true;
         echo json_encode($results);
     } catch (Exception $exception) {

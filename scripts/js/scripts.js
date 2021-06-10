@@ -71,23 +71,37 @@ function loadProfileData() {
                 let i = 0;
                 for (const dataKey in data) {
                     if (data.hasOwnProperty(dataKey) && dataKey != "success") {
-                        let row = table.insertRow(i);
-                        for (let j = 0; j < 2; j++) {
-                            let cell = row.insertCell(j);
-                            if (j == 0) {
-                                cell.classList.add("text-primary");
-                                cell.innerHTML = getUiTextForJsonKey(dataKey);
+                        if (dataKey == "activities") {
+                            table = document.getElementById("profile-activities");
+                            for (let j = 0; j < data[dataKey].length; j++) {
+                                let row = table.insertRow(j);
+                                for (let k = 0; k < 2; k++) {
+                                    let cell = row.insertCell(k);
+                                    cell.textContent = data[dataKey][j][k];
+                                }
                             }
-                            else if (j == 1) {
-                                cell.classList.add("text-secondary");
-                                if (data[dataKey].length == 0) {
-                                    cell.innerHTML = '-';
+                            let thead = table.tHead = document.createElement("thead");
+                            thead.innerHTML = "<tr><th>Idő (legújabb elöl)</th><th>Leírás</th></tr>";
+                        }
+                        else {
+                            let row = table.insertRow(i);
+                            for (let j = 0; j < 2; j++) {
+                                let cell = row.insertCell(j);
+                                if (j == 0) {
+                                    cell.classList.add("text-primary");
+                                    cell.innerHTML = getUiTextForJsonKey(dataKey);
                                 }
-                                else if (dataKey == "groups" && data[dataKey].length > 1) {
-                                    cell.innerHTML = data[dataKey].join(", ");
-                                }
-                                else {
-                                    cell.innerHTML = data[dataKey];
+                                else if (j == 1) {
+                                    cell.classList.add("text-secondary");
+                                    if (data[dataKey].length == 0) {
+                                        cell.innerHTML = '-';
+                                    }
+                                    else if (dataKey == "groups" && data[dataKey].length > 1) {
+                                        cell.innerHTML = data[dataKey].join(", ");
+                                    }
+                                    else {
+                                        cell.innerHTML = data[dataKey];
+                                    }
                                 }
                             }
                         }

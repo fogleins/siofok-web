@@ -79,24 +79,37 @@ function loadProfileData(): void {
                 let i = 0;
                 for (const dataKey in data) {
                     if (data.hasOwnProperty(dataKey) && dataKey != "success") {
-                        let row: HTMLTableRowElement = table.insertRow(i);
-                        for (let j = 0; j < 2; j++) {
-                            let cell: HTMLTableCellElement = row.insertCell(j);
-                            // the table displays key-value pairs, the first column is the key, which is of class
-                            // text-primary, and the value is text-secondary
-                            if (j == 0) {
-                                cell.classList.add("text-primary");
-                                cell.innerHTML = getUiTextForJsonKey(dataKey);
-                            } else if (j == 1) {
-                                cell.classList.add("text-secondary");
-                                if (data[dataKey].length == 0) {
-                                    cell.innerHTML = '-';
+                        if (dataKey == "activities") {
+                            table = document.getElementById("profile-activities") as HTMLTableElement;
+                            for (let j = 0; j < data[dataKey].length; j++) {
+                                let row: HTMLTableRowElement = table.insertRow(j);
+                                for (let k = 0; k < 2; k++) {
+                                    let cell: HTMLTableCellElement = row.insertCell(k);
+                                    cell.textContent = data[dataKey][j][k];
                                 }
-                                // if an item is an array, we display its elements with a given separator (', ')
-                                else if (dataKey == "groups" && data[dataKey].length > 1) {
-                                    cell.innerHTML = data[dataKey].join(", ");
-                                } else {
-                                    cell.innerHTML = data[dataKey];
+                            }
+                            let thead: HTMLTableSectionElement = table.tHead = document.createElement("thead");
+                            thead.innerHTML = "<tr><th>Idő (legújabb elöl)</th><th>Leírás</th></tr>";
+                        } else {
+                            let row: HTMLTableRowElement = table.insertRow(i);
+                            for (let j = 0; j < 2; j++) {
+                                let cell: HTMLTableCellElement = row.insertCell(j);
+                                // the table displays key-value pairs, the first column is the key, which is of class
+                                // text-primary, and the value is text-secondary
+                                if (j == 0) {
+                                    cell.classList.add("text-primary");
+                                    cell.innerHTML = getUiTextForJsonKey(dataKey);
+                                } else if (j == 1) {
+                                    cell.classList.add("text-secondary");
+                                    if (data[dataKey].length == 0) {
+                                        cell.innerHTML = '-';
+                                    }
+                                    // if an item is an array, we display its elements with a given separator (', ')
+                                    else if (dataKey == "groups" && data[dataKey].length > 1) {
+                                        cell.innerHTML = data[dataKey].join(", ");
+                                    } else {
+                                        cell.innerHTML = data[dataKey];
+                                    }
                                 }
                             }
                         }
