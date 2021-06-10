@@ -13,7 +13,6 @@
     try {
         $stmt = null;
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        // TODO: azonos nevűből ne lehessen újat hozzáadni + trim
         if ($_POST['action'] == VoteType::drinkAddSuggestion) {
             // insert the suggested drink into the database
             $stmt = $db->prepare("INSERT INTO drinks (suggested_by, name) VALUES (?, ?)");
@@ -35,6 +34,8 @@
                     $stmt->store_result();
                     $stmt->free_result();
                 }
+                Utils::logEvent(LogType::INFO(), "Italjavaslat hozzáadva: "
+                    . Utils::getDrinkNameById($drinkId), $_POST['userId']);
             }
         } else if ($_POST['action'] == VoteType::drinkAdd) {
             $stmt = $db->prepare("INSERT INTO drinks_votes VALUES (?, ?)");
@@ -43,6 +44,8 @@
                 echo json_encode(array("success" => false));
                 exit();
             }
+            Utils::logEvent(LogType::INFO(), "Italszavazás: szavazat hozzáadva: "
+                . Utils::getDrinkNameById($_POST['drinkId']), $_POST['userId']);
         } else if ($_POST['action'] == VoteType::drinkRemove) {
             $stmt = $db->prepare("DELETE FROM drinks_votes WHERE user_ID = ? AND drink_ID = ?");
             $stmt->bind_param("ii", $_POST['userId'], $_POST['drinkId']);
@@ -50,6 +53,8 @@
                 echo json_encode(array("success" => false));
                 exit();
             }
+            Utils::logEvent(LogType::INFO(), "Italszavazás: szavazat eltávolítva: "
+                . Utils::getDrinkNameById($_POST['drinkId']), $_POST['userId']);
         }
         echo json_encode(array("success" => true));
     } catch (Exception $exception) {

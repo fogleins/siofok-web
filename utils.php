@@ -65,7 +65,6 @@ class Utils
      */
     public static function requireRole(string $requiredRole): bool {
         $db = Utils::getDbObject();
-        $result = null;
         $roles = array();
         try {
             $result = $db->query("SELECT usergroup.name FROM users "
@@ -89,5 +88,27 @@ class Utils
             return true;
         }
         return in_array($requiredRole, $roles);
+    }
+
+    /**
+     * Gets the drink's name based on the id.
+     * @param int $drinkId The id of the drink we want to get the name of.
+     * @return string The name of the drink with the given ID.
+     */
+    public static function getDrinkNameById(int $drinkId): string {
+        $db = self::getDbObject();
+        $name = null;
+        try {
+            $stmt = $db->prepare("SELECT name FROM drinks WHERE drink_ID = ?");
+            $stmt->bind_param("i", $drinkId);
+            if ($stmt->execute()) {
+                $name = $stmt->get_result()->fetch_row()[0];
+            }
+        } catch (Exception $exception) {
+            self::logEvent(LogType::ERROR(), "Cannot get drink name by id: " . $exception->getMessage());
+        } finally {
+            $db->close();
+            return $name;
+        }
     }
 }
