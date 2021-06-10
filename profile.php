@@ -4,6 +4,9 @@
     if (!isset($_SESSION['access_token'])) {
         header("Location: login.php");
         exit();
+    } else {
+        include "utils.php";
+        Utils::logEvent(LogType::PAGE_VISIT(), "profile.php", $_SESSION['userId']);
     }
 ?>
 

@@ -18,9 +18,16 @@
 <div class="wrapper-div">
 <?php include "include/header.php" ?>
 <h2 class="text-primary text-center h2-top-center-margin">403 Forbidden</h2>
-  <div class="floating-div col-sm-4 col-lg-10 text-center" style="align-items: flex-start">
+  <div class="floating-div col-sm-8 col-lg-10 text-center" style="align-items: flex-start">
     <img id="dropsicle" src="include/dropsicle.svg" alt="error-icon">
     <h5>Nincs jogosultságod az oldal megtekintéséhez.</h5>
+    <div class="container col-sm-10 col-lg-6 mt-5">
+    <p>
+        Megjegyzés: az "Italszavazás" és "Lejátszási lista" oldalak eléréséhez "verified" jogosultsággal kell
+        rendelkezned. Ezt néhány percen, de legfeljebb órán belül meg kell kapnod. A jogosultságaidat a
+        <a href="profile.php">profilodon</a> ellenőrizheted.
+    </p>
+    </div>
   </div>
 </div>
 <?php include "include/footer.php"; ?>

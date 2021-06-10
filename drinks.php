@@ -14,14 +14,22 @@
 <?php
     include_once "utils.php";
     session_start();
-    include "include/header.php";
     // if the user is not logged in, we redirect them to the login page
     if (!isset($_SESSION['access_token'])) {
         header("Location: login.php");
         $_SESSION['redirect'] = "drinks.php";
         echo "<body>";
         exit();
+    } else {
+        Utils::logEvent(LogType::PAGE_VISIT(), "drinks.php", $_SESSION['userId']);
     }
+    // allow only verified users
+    if (!Utils::requireRole("verified")) {
+        include "include/403.php";
+        http_response_code(403);
+        die();
+    }
+    include "include/header.php";
 ?>
 <script type="text/javascript">
     function onLoad() {

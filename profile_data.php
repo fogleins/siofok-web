@@ -45,7 +45,8 @@
         }
         // get the user's activities
         $activities = array();
-        $stmt = $db->prepare("SELECT timestamp, description FROM log WHERE log.user_ID = ? ORDER BY timestamp DESC");
+        $stmt = $db->prepare("SELECT timestamp, description FROM log WHERE log.user_ID = ? "
+            . "AND log.event_type = 0 ORDER BY timestamp DESC");
         $stmt->bind_param("i", $_SESSION['userId']);
         if ($stmt->execute()) {
             $result = $stmt->get_result();

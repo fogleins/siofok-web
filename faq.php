@@ -17,6 +17,8 @@
         header("Location: login.php");
         $_SESSION['redirect'] = "faq.php";
         exit();
+    } else {
+        Utils::logEvent(LogType::PAGE_VISIT(), "faq.php", $_SESSION['userId']);
     }
 ?>
 <div class="wrapper-div">

@@ -12,12 +12,20 @@
 <?php
     include_once "utils.php";
     session_start();
-    include "include/header.php";
     if (!isset($_SESSION['access_token'])) {
         echo "<h2 class='text-warning text-center' style='margin-top: 15%'>A folytatáshoz be kell jelentkezned.</h2>";
         $_SESSION['redirect'] = "playlist.php";
         exit();
+    } else {
+        Utils::logEvent(LogType::PAGE_VISIT(), "playlist.php", $_SESSION['userId']);
     }
+    // allow only verified users
+    if (!Utils::requireRole("verified")) {
+        include "include/403.php";
+        http_response_code(403);
+        die();
+    }
+    include "include/header.php";
 ?>
 
 <div class="wrapper-div">

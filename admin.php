@@ -1,12 +1,14 @@
 <?php
     session_start();
+    include "utils.php";
     // if the user is not logged in, we redirect them to the login page
     if (!isset($_SESSION['access_token'])) {
         header("Location: login.php");
         exit();
+    } else {
+        Utils::logEvent(LogType::PAGE_VISIT(), "admin.php", $_SESSION['userId']);
     }
     // allow only users with admin privileges
-    include "utils.php";
     if (!Utils::requireRole("admin")) {
         include "include/403.php";
         http_response_code(403);
