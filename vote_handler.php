@@ -14,10 +14,10 @@
         $stmt = null;
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         // TODO: azonos nevűből ne lehessen újat hozzáadni + trim
-        if ($_GET['action'] == VoteType::drinkAddSuggestion) {
+        if ($_POST['action'] == VoteType::drinkAddSuggestion) {
             // insert the suggested drink into the database
             $stmt = $db->prepare("INSERT INTO drinks (suggested_by, name) VALUES (?, ?)");
-            $stmt->bind_param("is", $_GET['userId'], $_GET['drinkName']);
+            $stmt->bind_param("is", $_POST['userId'], $_POST['drinkName']);
             if (!$stmt->execute()) {
                 echo json_encode(array("success" => false));
                 exit();
@@ -30,22 +30,22 @@
                 $drinkId = $stmt->get_result()->fetch_row()[0];
                 $stmt->free_result();
                 $stmt = $db->prepare("INSERT INTO drinks_votes VALUES (?, ?)");
-                $stmt->bind_param("ii", $_GET['userId'], $drinkId);
+                $stmt->bind_param("ii", $_POST['userId'], $drinkId);
                 if ($stmt->execute()) {
                     $stmt->store_result();
                     $stmt->free_result();
                 }
             }
-        } else if ($_GET['action'] == VoteType::drinkAdd) {
+        } else if ($_POST['action'] == VoteType::drinkAdd) {
             $stmt = $db->prepare("INSERT INTO drinks_votes VALUES (?, ?)");
-            $stmt->bind_param("ii", $_GET['userId'], $_GET['drinkId']);
+            $stmt->bind_param("ii", $_POST['userId'], $_POST['drinkId']);
             if (!$stmt->execute()) {
                 echo json_encode(array("success" => false));
                 exit();
             }
-        } else if ($_GET['action'] == VoteType::drinkRemove) {
+        } else if ($_POST['action'] == VoteType::drinkRemove) {
             $stmt = $db->prepare("DELETE FROM drinks_votes WHERE user_ID = ? AND drink_ID = ?");
-            $stmt->bind_param("ii", $_GET['userId'], $_GET['drinkId']);
+            $stmt->bind_param("ii", $_POST['userId'], $_POST['drinkId']);
             if (!$stmt->execute()) {
                 echo json_encode(array("success" => false));
                 exit();

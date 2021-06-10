@@ -18,7 +18,7 @@ let USER_ID: number = null;
 function submitVote(userID: number, drinkID: number, action: VoteType): void {
     $.ajax({
         "url": "vote_handler.php",
-        "type": "GET",
+        "type": "POST",
         "timeout": 5000,
         "dataType": "json",
         "data": {

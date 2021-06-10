@@ -42,7 +42,7 @@ class DrinksVoteUpdater {
             = `Az adatok ${DrinksVoteUpdater.instance.interval} másodpercenként automatikusan frissülnek`;
         return $.ajax({
             "url": "vote_updater.php",
-            "type": "GET",
+            "type": "POST",
             "timeout": 5000,
             "dataType": "json",
             "data": {
@@ -136,7 +136,7 @@ class DrinksVoteUpdater {
         }
         $.ajax({
             "url": "vote_handler.php",
-            "type": "GET",
+            "type": "POST",
             "timeout": 5000,
             "dataType": "json",
             "data": {

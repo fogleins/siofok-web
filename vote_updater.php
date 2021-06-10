@@ -19,7 +19,7 @@
             if (!$stmt) {
                 throw new Exception("Cannot prepare sql query");
             }
-            $stmt->bind_param("ii", $_GET['userId'], $row[0]);
+            $stmt->bind_param("ii", $_POST['userId'], $row[0]);
             if ($stmt->execute()) {
                 $stmt->bind_result($userVoteCount);
                 $stmt->fetch();
