@@ -11,6 +11,7 @@ final class LogType extends Enum {
     private const INFO = 0;
     private const ERROR = 1;
     private const PAGE_VISIT = 2;
+    private const OUTER_PAGE_VISIT = 3;
 
     public static function INFO() : LogType {
         return new LogType(self::INFO);
@@ -22,6 +23,10 @@ final class LogType extends Enum {
 
     public static function PAGE_VISIT() : LogType {
         return new LogType(self::PAGE_VISIT);
+    }
+
+    public static function OUTER_PAGE_VISIT() : LogType {
+        return new LogType(self::OUTER_PAGE_VISIT);
     }
 }
 

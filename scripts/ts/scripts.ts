@@ -138,3 +138,19 @@ function getUiTextForJsonKey(jsonKey: string): string {
             return "Felhasználói csoportok";
     }
 }
+
+/**
+ * Logs a click if the clicked link points outside of this site.
+ * @param message The message to log. Usually the link or the name of the site the link is pointing to.
+ */
+function logOuterLinkVisit(message: string): void {
+    $.ajax({
+        url: "xhr_log_handler.php",
+        method: "POST",
+        timeout: 5000,
+        data: {
+            logType: 3,
+            message: message
+        }
+    });
+}

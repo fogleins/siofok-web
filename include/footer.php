@@ -8,6 +8,7 @@
         ?>
     </div>
     <div class="footer-div">
-        <a href="https://github.com/fogleins/siofok2021-web" class="footer-link">GitHub</a>
+        <a href="https://github.com/fogleins/siofok2021-web" class="footer-link" target="_blank"
+           onclick="logOuterLinkVisit('GitHub')">GitHub</a>
     </div>
 </div>

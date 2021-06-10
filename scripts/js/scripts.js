@@ -125,4 +125,15 @@ function getUiTextForJsonKey(jsonKey) {
             return "Felhasználói csoportok";
     }
 }
+function logOuterLinkVisit(message) {
+    $.ajax({
+        url: "xhr_log_handler.php",
+        method: "POST",
+        timeout: 5000,
+        data: {
+            logType: 3,
+            message: message
+        }
+    });
+}
 //# sourceMappingURL=scripts.js.map

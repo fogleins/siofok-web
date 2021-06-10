@@ -44,7 +44,8 @@
             $link = $db->query("SELECT link FROM playlist WHERE playlist_ID = 1");
             if ($link->num_rows > 0) {
                 echo "<a href='" . $link->fetch_row()[0] . "' role='button' id='playlist-btn'"
-                    . " class='btn btn-primary btn-lg' target='_blank'>Tovább a listához</a>";
+                    . " class='btn btn-primary btn-lg' target='_blank' onclick='logOuterLinkVisit(`Spotify`)'>"
+                    . "Tovább a listához</a>";
             } else {
                 Utils::logEvent(LogType::ERROR(), "Cannot read playlist link");
             }
