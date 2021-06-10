@@ -41,8 +41,12 @@
 </div>
 <!-- toasts end -->
 <div class="wrapper-div">
-    <div class="floating-div col-sm-10 col-lg-6">
+    <div class="floating-div col-sm-10 col-lg-7">
         <h3 class="text-secondary">Felhasználók kezelése</h3>
+        <div id="unsaved-changes" hidden>
+            <h5 class="text-warning">Nem mentett módosítások:</h5>
+            <p id="unsaved-changes-details"></p>
+        </div>
         <div class="scrollable-table-container" id="users-container">
             <table class="table table-striped table-hover" id="user-management"></table>
         </div>
@@ -87,7 +91,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger" id="dismiss-changes">
+                <button type="button" class="btn btn-outline-danger" id="dismiss-changes" data-bs-dismiss="modal">
                     Nem mentett módosítások elvetése</button>
                 <button type="button" class="btn btn-outline-secondary modal-close" data-bs-dismiss="modal">Bezárás</button>
                 <button type="button" class="btn btn-primary" id="modal-save" data-bs-dismiss="modal">Mentés</button>

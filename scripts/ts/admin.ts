@@ -13,6 +13,9 @@ namespace Admin {
     let usersTags: string[] = [];
     let changedRoles: Object[] = [];
 
+    /**
+     * Creates the user management table and fills it with data.
+     */
     function loadUserManagement() {
         $.ajax({
             "url": "user_management.php",
@@ -139,6 +142,11 @@ namespace Admin {
         $(".modal-close").click(function () {
             // TODO: temporarily store changes for the user's role, because after closing and reopening the modal,
             //  only the already saved roles show up
+            // if changedRoles is not an empty array
+            if (changedRoles.length != 0) {
+                document.getElementById("unsaved-changes-details").textContent = JSON.stringify(changedRoles);
+                document.getElementById("unsaved-changes").hidden = false;
+            }
             $("#roles").tagEditor("destroy");
         })
 
@@ -155,13 +163,14 @@ namespace Admin {
                     },
                     success: function (data: any) {
                         if (data.success) {
-                            // todo: reload table data where needed
                             Toast.showToast("Sikeres művelet", "A módosítások mentése sikeres volt.",
                                 BootstrapColors.success);
                         } else {
                             Toast.showToast("Hiba", "Nem minden módosítást sikerült menteni. " +
                                 "Részletek a rendszernaplóban találhatók.", BootstrapColors.danger);
                         }
+                        document.getElementById("unsaved-changes").hidden = true;
+                        document.getElementById("unsaved-changes-details").textContent = null;
                     },
                     error: function (err: any) {
                         console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
@@ -169,6 +178,7 @@ namespace Admin {
                             BootstrapColors.danger);
                     }
                 });
+                refreshUserRoles();
                 $("#roles").tagEditor("destroy");
             }
         })
@@ -176,6 +186,44 @@ namespace Admin {
         $("#dismiss-changes").click(function () {
             $("#roles").tagEditor("destroy");
             changedRoles = [];
+            document.getElementById("unsaved-changes").hidden = true;
+            document.getElementById("unsaved-changes-details").textContent = null;
         })
     });
+
+    /**
+     * Updates the user management table's roles column. Called after roles have been modified.
+     * Note: if a new user has been added in the meantime, the page should be reloaded as this method does not insert
+     * new rows into the table, therefore when it updates the roles and it receives more users than there are rows in
+     * the table, it probably will throw an error and the update is not guaranteed.
+     */
+    function refreshUserRoles() {
+        $.ajax({
+            url: "user_management.php",
+            method: "GET",
+            timeout: 5000,
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    let table: HTMLTableElement = document.getElementById("user-management") as HTMLTableElement;
+                    for (let i = 0; i < data.length; i++) {
+                        let row: HTMLTableRowElement = table.querySelectorAll("tr")[i + 1];
+                        let j: number = 0;
+                        for (const dataKey in data[i]) {
+                            if (data[i].hasOwnProperty(dataKey)) {
+                                let cell: HTMLTableCellElement = row.querySelectorAll("td")[j];
+                                if (dataKey == "roles") {
+                                    cell.textContent = data[i][dataKey].join(", ");
+                                }
+                                j++;
+                            }
+                        }
+                    }
+                }
+            },
+            error: function (error) {
+                console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
+            }
+        });
+    }
 }

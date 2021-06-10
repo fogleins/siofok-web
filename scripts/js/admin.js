@@ -126,6 +126,10 @@ var Admin;
             modalTitle.textContent = userFullName + " [" + userId + "] jogosultságainak kezelése";
         });
         $(".modal-close").click(function () {
+            if (changedRoles.length != 0) {
+                document.getElementById("unsaved-changes-details").textContent = JSON.stringify(changedRoles);
+                document.getElementById("unsaved-changes").hidden = false;
+            }
             $("#roles").tagEditor("destroy");
         });
         $("#modal-save").click(function () {
@@ -147,19 +151,53 @@ var Admin;
                             Toast.showToast("Hiba", "Nem minden módosítást sikerült menteni. " +
                                 "Részletek a rendszernaplóban találhatók.", BootstrapColors.danger);
                         }
+                        document.getElementById("unsaved-changes").hidden = true;
+                        document.getElementById("unsaved-changes-details").textContent = null;
                     },
                     error: function (err) {
                         console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
                         Toast.showToast("Hiba", "Hiba az AJAX kérés során. Részletek a konzolon.", BootstrapColors.danger);
                     }
                 });
+                refreshUserRoles();
                 $("#roles").tagEditor("destroy");
             }
         });
         $("#dismiss-changes").click(function () {
             $("#roles").tagEditor("destroy");
             changedRoles = [];
+            document.getElementById("unsaved-changes").hidden = true;
+            document.getElementById("unsaved-changes-details").textContent = null;
         });
     });
+    function refreshUserRoles() {
+        $.ajax({
+            url: "user_management.php",
+            method: "GET",
+            timeout: 5000,
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    let table = document.getElementById("user-management");
+                    for (let i = 0; i < data.length; i++) {
+                        let row = table.querySelectorAll("tr")[i + 1];
+                        let j = 0;
+                        for (const dataKey in data[i]) {
+                            if (data[i].hasOwnProperty(dataKey)) {
+                                let cell = row.querySelectorAll("td")[j];
+                                if (dataKey == "roles") {
+                                    cell.textContent = data[i][dataKey].join(", ");
+                                }
+                                j++;
+                            }
+                        }
+                    }
+                }
+            },
+            error: function (error) {
+                console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
+            }
+        });
+    }
 })(Admin || (Admin = {}));
 //# sourceMappingURL=admin.js.map
