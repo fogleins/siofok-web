@@ -111,7 +111,7 @@ var Admin;
             }
         });
     }
-    $(document).ready(function () {
+    $(() => {
         loadUserManagement();
         let modal = document.getElementById("userManagementModal");
         modal.addEventListener('show.bs.modal', function (event) {
@@ -122,14 +122,14 @@ var Admin;
             let modalTitle = document.getElementById('userManagementModalLabel');
             modalTitle.textContent = userFullName + " [" + userId + "] jogosultságainak kezelése";
         });
-        $(".modal-close").click(function () {
+        $(".modal-close").on("click", function () {
             if (changedRoles.length != 0) {
                 document.getElementById("unsaved-changes-details").textContent = JSON.stringify(changedRoles);
                 document.getElementById("unsaved-changes").hidden = false;
             }
             $("#roles").tagEditor("destroy");
         });
-        $("#modal-save").click(function () {
+        $("#modal-save").on("click", function () {
             if (changedRoles.length != 0) {
                 $.ajax({
                     url: "user_management.php",
@@ -160,7 +160,7 @@ var Admin;
                 $("#roles").tagEditor("destroy");
             }
         });
-        $("#dismiss-changes").click(function () {
+        $("#dismiss-changes").on("click", function () {
             $("#roles").tagEditor("destroy");
             changedRoles = [];
             document.getElementById("unsaved-changes").hidden = true;

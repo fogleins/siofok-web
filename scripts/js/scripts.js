@@ -43,7 +43,7 @@ function submitVote(userID, drinkID, action) {
         }
     });
 }
-$(document).ready(function () {
+$(() => {
     let navLinks = document.querySelectorAll(".nav-link, .dropdown-item");
     for (let i = 0; i < navLinks.length; i++) {
         let navLink = navLinks[i];

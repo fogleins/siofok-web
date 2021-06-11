@@ -148,7 +148,7 @@ namespace Admin {
         });
     }
 
-    $(document).ready(function () {
+    $(() => {
         loadUserManagement();
         let modal = document.getElementById("userManagementModal");
         modal.addEventListener('show.bs.modal', function (event: any) {
@@ -163,9 +163,7 @@ namespace Admin {
             modalTitle.textContent = userFullName + " [" + userId + "] jogosultságainak kezelése";
         })
 
-        $(".modal-close").click(function () {
-            // TODO: temporarily store changes for the user's role, because after closing and reopening the modal,
-            //  only the already saved roles show up
+        $(".modal-close").on("click", function () {
             // if changedRoles is not an empty array
             if (changedRoles.length != 0) {
                 document.getElementById("unsaved-changes-details").textContent = JSON.stringify(changedRoles);
@@ -174,7 +172,7 @@ namespace Admin {
             $("#roles").tagEditor("destroy");
         })
 
-        $("#modal-save").click(function () {
+        $("#modal-save").on("click", function () {
             if (changedRoles.length != 0) {
                 $.ajax({
                     url: "user_management.php",
@@ -207,7 +205,7 @@ namespace Admin {
             }
         })
 
-        $("#dismiss-changes").click(function () {
+        $("#dismiss-changes").on("click", function () {
             $("#roles").tagEditor("destroy");
             changedRoles = [];
             document.getElementById("unsaved-changes").hidden = true;

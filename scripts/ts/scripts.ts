@@ -49,7 +49,7 @@ function submitVote(userID: number, drinkID: number, action: VoteType): void {
 /**
  * Sets the page's link in the header active when a page loads.
  */
-$(document).ready(function () {
+$(() => {
     // set the active state for nav-links and dropdown-items as needed
     let navLinks = document.querySelectorAll(".nav-link, .dropdown-item");
     for (let i = 0; i < navLinks.length; i++) {
