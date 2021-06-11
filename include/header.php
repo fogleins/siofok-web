@@ -32,6 +32,9 @@
                         <li><a class="dropdown-item" href="faq.php">GYIK</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="admin.php">Admin</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="https://github.com/fogleins/siofok2021-web" target="_blank"
+                               onclick="logOuterLinkVisit('GitHub')">GitHub</a></li>
                     </ul>
                 </li>
             </ul>
