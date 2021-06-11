@@ -156,6 +156,7 @@ var Admin;
                         Toast.showToast("Hiba", "Hiba az AJAX kérés során. Részletek a konzolon.", BootstrapColors.danger);
                     }
                 });
+                changedRoles = [];
                 refreshUserRoles();
                 $("#roles").tagEditor("destroy");
             }
@@ -179,11 +180,11 @@ var Admin;
                     for (let i = 0; i < data.length; i++) {
                         let row = table.querySelectorAll("tr")[i + 1];
                         let j = 0;
-                        for (const dataKey in data[i]) {
-                            if (data[i].hasOwnProperty(dataKey)) {
+                        for (const dataKey in data.users[i]) {
+                            if (data.users[i].hasOwnProperty(dataKey)) {
                                 let cell = row.querySelectorAll("td")[j];
                                 if (dataKey == "roles") {
-                                    cell.textContent = data[i][dataKey].join(", ");
+                                    cell.textContent = data.users[i][dataKey].join(", ");
                                 }
                                 j++;
                             }

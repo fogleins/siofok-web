@@ -200,6 +200,7 @@ namespace Admin {
                             BootstrapColors.danger);
                     }
                 });
+                changedRoles = [];
                 refreshUserRoles();
                 $("#roles").tagEditor("destroy");
             }
@@ -225,17 +226,17 @@ namespace Admin {
             method: "GET",
             timeout: 5000,
             dataType: "json",
-            success: function (data) {
+            success: function (data: ResponseData) {
                 if (data.success) {
                     let table: HTMLTableElement = document.getElementById("user-management") as HTMLTableElement;
                     for (let i = 0; i < data.length; i++) {
                         let row: HTMLTableRowElement = table.querySelectorAll("tr")[i + 1];
                         let j: number = 0;
-                        for (const dataKey in data[i]) {
-                            if (data[i].hasOwnProperty(dataKey)) {
+                        for (const dataKey in data.users[i]) {
+                            if (data.users[i].hasOwnProperty(dataKey)) {
                                 let cell: HTMLTableCellElement = row.querySelectorAll("td")[j];
                                 if (dataKey == "roles") {
-                                    cell.textContent = data[i][dataKey].join(", ");
+                                    cell.textContent = data.users[i][dataKey].join(", ");
                                 }
                                 j++;
                             }
