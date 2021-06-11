@@ -5,6 +5,7 @@
     try {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $results = array();
+            $users = array();
             if (!$db) {
                 Utils::logEvent(LogType::ERROR(), "Cannot get db object in user_management.php");
             }
@@ -22,12 +23,12 @@
                 if ($row[0] != $currentUserId) {
                     if ($currentUserData != null) {
                         $currentUserData["roles"] = $currentUserRoles;
-                        array_push($results, $currentUserData);
+                        array_push($users, $currentUserData);
                     }
                     $currentUserId = $row[0];
                     $currentUserData = array();
                     $currentUserRoles = array();
-                    $currentUserData["id"] = $row[0];
+                    $currentUserData["id"] = intval($row[0]);
                     $currentUserData["name"] = $row[1];
                     $jsonLength++;
                 }
@@ -36,13 +37,13 @@
             if (!isset($currentUserData["roles"])) {
                 $currentUserData["roles"] = $currentUserRoles;
             }
-            array_push($results, $currentUserData);
+            array_push($users, $currentUserData);
+            $results["users"] = $users;
             $results["length"] = $jsonLength;
             $availableRoles = array();
             $result = $db->query("SELECT name, usergroup_ID FROM usergroup");
             while ($row = $result->fetch_row()) {
-                $availableRoles[$row[0]] = $row[1];
-//                array_push($availableRoles, array("label" => $row[0], "value" => $row[1]));
+                array_push($availableRoles, array("name" => $row[0], "id" => intval($row[1])));
             }
             $results["availableRoles"] = $availableRoles;
             $results["success"] = true;

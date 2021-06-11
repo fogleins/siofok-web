@@ -7,8 +7,34 @@ namespace Admin {
         removeRole
     }
 
+    /**
+     * The properties of a user.
+     */
+    interface UserData {
+        // make the interface indexable by string
+        readonly [key: string]: number | string | string[];
+        id: number;
+        name: string;
+        roles: string[];
+    }
+
+    interface RoleData {
+        name: string;
+        id: number;
+    }
+
+    /**
+     * Fields of the userDataQuery response.
+     */
+    interface ResponseData {
+        users: UserData[];
+        length: number;
+        availableRoles: RoleData[];
+        success: boolean;
+    }
+
     // a list of roles a user can have
-    let availableRoles: JSON;
+    let availableRoles: RoleData[];
     let rolesForAutocomplete: string[] = [];
     let usersTags: string[] = [];
     let changedRoles: Object[] = [];
@@ -23,33 +49,30 @@ namespace Admin {
             "timeout": 5000,
             "dataType": "json",
             "data": { },
-            "success": function (data: any) {
+            "success": function (data: ResponseData) {
                 if (data.success) {
-                    availableRoles = data["availableRoles"];
-                    for (const availableRolesKey in availableRoles) {
-                        if (availableRoles.hasOwnProperty(availableRolesKey)) {
-                            rolesForAutocomplete.push(availableRolesKey);
-                            availableRoles[availableRolesKey] = parseInt(availableRoles[availableRolesKey], 10);
-                        }
+                    availableRoles = data.availableRoles;
+                    for (let i = 0; i < availableRoles.length; i++) {
+                        rolesForAutocomplete.push(availableRoles[i].name);
                     }
                     let table: HTMLTableElement = document.getElementById("user-management") as HTMLTableElement;
                     for (let i = 0; i < data.length; i++) {
                         let row: HTMLTableRowElement = table.insertRow(i);
                         let j: number = 0;
-                        for (const dataKey in data[i]) {
-                            if (data[i].hasOwnProperty(dataKey) && dataKey != "success") {
+                        for (const dataKey in data.users[i]) {
+                            if (data.users[i].hasOwnProperty(dataKey)) {
                                 let cell: HTMLTableCellElement = row.insertCell(j);
                                 cell.style.verticalAlign = "middle";
                                 if (dataKey != "roles") {
-                                    cell.textContent = data[i][dataKey];
+                                    cell.textContent = data.users[i][dataKey].toString();
                                 } else {
-                                    cell.textContent = data[i][dataKey].join(", ");
+                                    cell.textContent = data["users"][i][dataKey].join(", ");
                                 }
                                 j++;
                             }
                         }
                         // if the user has no roles (if we didn't add a cell here, there would be only 2 cells in this row)
-                        if (!data[i]["roles"]) {
+                        if (!data.users[i].roles) {
                             row.insertCell(2);
                         }
                         let cell: HTMLTableCellElement = row.insertCell(3);
@@ -60,8 +83,8 @@ namespace Admin {
                         button.textContent = "Jogosultságok kezelése";
                         button.setAttribute("data-bs-toggle", "modal")
                         button.setAttribute("data-bs-target", "#userManagementModal")
-                        button.setAttribute("data-bs-user", data[i]["name"]);
-                        button.setAttribute("data-bs-userId", data[i]["id"]);
+                        button.setAttribute("data-bs-user", data.users[i].name);
+                        button.setAttribute("data-bs-userId", data.users[i].id.toString());
                         button.addEventListener("click", function () {
                             usersTags = [];
                             usersTags = table.querySelectorAll("tr")[i + 1].cells[2].textContent
@@ -78,12 +101,13 @@ namespace Admin {
                                 forceLowercase: false,
                                 placeholder: "Adj meg jogosultságokat...",
                                 initialTags: usersTags,
-                                beforeTagSave: function(field, editor, tags, tag, val) {
-                                    if (availableRoles[val]) {
+                                beforeTagSave: function(field: any, editor: any, tags: any, tag: any, val: string) {
+                                    // if (availableRoles[val]) {
+                                    if (getArrayItemWithValue(availableRoles, "name", val)) {
                                         changedRoles.push({
                                             action: Action.addRole,
                                             userId: userId,
-                                            roleId: availableRoles[val]
+                                            roleId: getArrayItemWithValue(availableRoles, "name", val).id
                                         });
                                     } else {
                                         // remove invalid tag
@@ -93,16 +117,16 @@ namespace Admin {
                                         }, 10);
                                     }
                                 },
-                                beforeTagDelete: function (field, editor, tags, val) {
+                                beforeTagDelete: function (field: any, editor: any, tags: any, val: string) {
                                     // in the beforeTagSave event we remove the tags if they are not valid (e.g. they
                                     // are not in the json), and that operation also triggers this event, and we don't
                                     // want to add only the userId and action to the changedRoles array, therefore we
                                     // need this if statement
-                                    if (availableRoles[val]) {
+                                    if (getArrayItemWithValue(availableRoles, "name", val)) {
                                         changedRoles.push({
                                             action: Action.removeRole,
                                             userId: userId,
-                                            roleId: availableRoles[val]
+                                            roleId: getArrayItemWithValue(availableRoles, "name", val).id
                                         });
                                     } else {
                                         // feedback on the console
@@ -127,7 +151,7 @@ namespace Admin {
     $(document).ready(function () {
         loadUserManagement();
         let modal = document.getElementById("userManagementModal");
-        modal.addEventListener('show.bs.modal', function (event) {
+        modal.addEventListener('show.bs.modal', function (event: any) {
             // Button that triggered the modal
             let button = event.relatedTarget
             // Extract info from data-bs-* attributes
@@ -225,5 +249,20 @@ namespace Admin {
                 console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
             }
         });
+    }
+
+    /**
+     * Gets the first element of an array where the given key's value matches the one that's passed as parameter.
+     * @param array The array to search in.
+     * @param key The key of the value that has to be matched.
+     * @param value The value the key's value in the array should match.
+     */
+    function getArrayItemWithValue(array: any[], key: string, value: string | number): any {
+        for (const object of array) {
+            if (object[key] && object[key] == value) {
+                return object;
+            }
+        }
+        return null;
     }
 }

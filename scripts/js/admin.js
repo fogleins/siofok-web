@@ -20,31 +20,28 @@ var Admin;
             "data": {},
             "success": function (data) {
                 if (data.success) {
-                    availableRoles = data["availableRoles"];
-                    for (const availableRolesKey in availableRoles) {
-                        if (availableRoles.hasOwnProperty(availableRolesKey)) {
-                            rolesForAutocomplete.push(availableRolesKey);
-                            availableRoles[availableRolesKey] = parseInt(availableRoles[availableRolesKey], 10);
-                        }
+                    availableRoles = data.availableRoles;
+                    for (let i = 0; i < availableRoles.length; i++) {
+                        rolesForAutocomplete.push(availableRoles[i].name);
                     }
                     let table = document.getElementById("user-management");
                     for (let i = 0; i < data.length; i++) {
                         let row = table.insertRow(i);
                         let j = 0;
-                        for (const dataKey in data[i]) {
-                            if (data[i].hasOwnProperty(dataKey) && dataKey != "success") {
+                        for (const dataKey in data.users[i]) {
+                            if (data.users[i].hasOwnProperty(dataKey)) {
                                 let cell = row.insertCell(j);
                                 cell.style.verticalAlign = "middle";
                                 if (dataKey != "roles") {
-                                    cell.textContent = data[i][dataKey];
+                                    cell.textContent = data.users[i][dataKey].toString();
                                 }
                                 else {
-                                    cell.textContent = data[i][dataKey].join(", ");
+                                    cell.textContent = data["users"][i][dataKey].join(", ");
                                 }
                                 j++;
                             }
                         }
-                        if (!data[i]["roles"]) {
+                        if (!data.users[i].roles) {
                             row.insertCell(2);
                         }
                         let cell = row.insertCell(3);
@@ -55,8 +52,8 @@ var Admin;
                         button.textContent = "Jogosultságok kezelése";
                         button.setAttribute("data-bs-toggle", "modal");
                         button.setAttribute("data-bs-target", "#userManagementModal");
-                        button.setAttribute("data-bs-user", data[i]["name"]);
-                        button.setAttribute("data-bs-userId", data[i]["id"]);
+                        button.setAttribute("data-bs-user", data.users[i].name);
+                        button.setAttribute("data-bs-userId", data.users[i].id.toString());
                         button.addEventListener("click", function () {
                             usersTags = [];
                             usersTags = table.querySelectorAll("tr")[i + 1].cells[2].textContent
@@ -74,11 +71,11 @@ var Admin;
                                 placeholder: "Adj meg jogosultságokat...",
                                 initialTags: usersTags,
                                 beforeTagSave: function (field, editor, tags, tag, val) {
-                                    if (availableRoles[val]) {
+                                    if (getArrayItemWithValue(availableRoles, "name", val)) {
                                         changedRoles.push({
                                             action: Action.addRole,
                                             userId: userId,
-                                            roleId: availableRoles[val]
+                                            roleId: getArrayItemWithValue(availableRoles, "name", val).id
                                         });
                                     }
                                     else {
@@ -89,11 +86,11 @@ var Admin;
                                     }
                                 },
                                 beforeTagDelete: function (field, editor, tags, val) {
-                                    if (availableRoles[val]) {
+                                    if (getArrayItemWithValue(availableRoles, "name", val)) {
                                         changedRoles.push({
                                             action: Action.removeRole,
                                             userId: userId,
-                                            roleId: availableRoles[val]
+                                            roleId: getArrayItemWithValue(availableRoles, "name", val).id
                                         });
                                     }
                                     else {
@@ -198,6 +195,14 @@ var Admin;
                 console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
             }
         });
+    }
+    function getArrayItemWithValue(array, key, value) {
+        for (const object of array) {
+            if (object[key] && object[key] == value) {
+                return object;
+            }
+        }
+        return null;
     }
 })(Admin || (Admin = {}));
 //# sourceMappingURL=admin.js.map
