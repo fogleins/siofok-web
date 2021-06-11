@@ -35,6 +35,7 @@
         $result = $stmt->get_result();
 
         // if the id was not found in the database
+        $newUser = false;
         if ($result && $result->num_rows < 1) {
             $stmt = $db->prepare("INSERT INTO users (email, family_name, given_name, full_name, picture_link, 
                    google_id) VALUES (?, ?, ?, ?, ?, ?);");
@@ -44,6 +45,7 @@
             $stmt->bind_param('ssssss', $userData['email'], $userData['familyName'],
                 $userData['givenName'], $userData['name'], $userData['picture'], $userData['id']);
             $stmt->execute();
+            $newUser = true;
         }
 
         // read the user's data and set up the session
@@ -64,11 +66,16 @@
         $_SESSION['googleId'] = $result[6];
         $_SESSION['isAdmin'] = $result[7];
 
+        // if the user logs in for the first time, a default 'user' role will be granted to them
+        if ($newUser) {
+            $roleId = $db->query("SELECT usergroup_ID FROM usergroup WHERE name = 'user';")->fetch_row()[0];
+            $db->query("INSERT INTO user_usergroup VALUES ({$_SESSION['userId']}, {$roleId})");
+        }
+
         // log the login event
         Utils::logEvent(LogType::INFO(), "Login", $_SESSION['userId']);
 
     } catch (Exception $exception) {
-//        echo $exception->getMessage();
         Utils::logEvent(LogType::ERROR(), $exception->getMessage());
     } finally {
         if ($db != null)

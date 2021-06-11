@@ -10,7 +10,7 @@
                 Utils::logEvent(LogType::ERROR(), "Cannot get db object in user_management.php");
             }
             mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-            // query all drinks ordered by vote count
+            // query users' data
             $result = $db->query("SELECT users.user_ID, users.full_name, usergroup.name FROM users "
                 . "LEFT OUTER JOIN user_usergroup ON user_usergroup.user_ID = users.user_ID "
                 . "LEFT OUTER JOIN usergroup ON usergroup.usergroup_ID = user_usergroup.usergroup_ID "
