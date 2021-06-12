@@ -8,4 +8,5 @@ interface JQuery {
     tagEditor(x: Object): JQuery;
     tagEditor(x: Function): JQuery;
     toast(x: string): JQuery;
+    daterangepicker(properties: Object, callback?: Function): JQuery;
 }
