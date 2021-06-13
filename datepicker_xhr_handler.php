@@ -6,7 +6,6 @@
     if (($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["userId"] != $_SESSION["userId"])
         || ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET["userId"] != $_SESSION["userId"])) {
         echo json_encode(array("success" => false));
-        echo "rip";
         exit();
     }
 

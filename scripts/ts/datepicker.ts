@@ -119,8 +119,9 @@ namespace Datepicker {
             success: function (response) {
                 if (response.success) {
                     for (let i = 0; i < response.data.length; i++) {
-                        // TODO: match locale format
-                        addInputRow(response.data[i][0], response.data[i][1], response.data[i][2]);
+                        addInputRow(response.data[i].response_ID,
+                            new Date(response.data[i].start_date).toLocaleDateString("hu"),
+                            new Date(response.data[i].end_date).toLocaleDateString("hu"));
                     }
                 }
             }
@@ -132,24 +133,23 @@ namespace Datepicker {
      * @private
      */
     function addInputRow(recordId?: number, startDate?: string, endDate?: string) {
-        let id: number = nextId;
-        if (recordId != null) {
-            id = recordId;
-        }
         let table: HTMLTableElement = document.getElementById("date-picker-table") as HTMLTableElement;
         let row = table.insertRow(table.rows.length - 1);
         let cell = row.insertCell(0);
         let div = document.createElement("div");
-        div.id = `form-group-${id}`;
+        div.id = `form-group-${nextId}`;
         div.classList.add("input-group");
         let textField: HTMLInputElement = document.createElement("input");
         textField.type = "text";
         textField.classList.add("form-control");
+        if (recordId != null) {
+            textField.setAttribute("data-recordId", recordId.toString(10));
+        }
         let button = document.createElement("button");
         button.classList.add("btn", "btn-outline-danger");
-        button.setAttribute("data-for-textfield", `rangePicker${id}`);
+        button.setAttribute("data-for-textfield", `rangePicker${nextId}`);
         button.setAttribute("data-parent", div.id);
-        let btnId = `delete-btn-for-rangePicker${id}`;
+        let btnId = `delete-btn-for-rangePicker${nextId}`;
         button.id = btnId;
         button.textContent = "Törlés";
         initDatePicker(textField, startDate, endDate);
