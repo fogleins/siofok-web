@@ -12,7 +12,7 @@
                     <a class="nav-link" href=".">Kezdőlap</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Időpontválasztás</a>
+                    <a class="nav-link" href="datepicker.php">Időpontválasztás</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="drinks.php">Italszavazás</a>

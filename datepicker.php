@@ -1,5 +1,13 @@
 <?php
-    // TODO: require login
+    session_start();
+    // if the user is not logged in, we redirect them to the login page
+    if (!isset($_SESSION['access_token'])) {
+        header("Location: login.php");
+        exit();
+    } else {
+        include "utils.php";
+        Utils::logEvent(LogType::PAGE_VISIT(), "datepicker.php", $_SESSION['userId']);
+    }
     include "include/header.php";
 ?>
 <!doctype html>
@@ -28,7 +36,6 @@
                     <button class="btn btn-outline-success playlist-div mt-3" id="date-add">Időpont megadása</button>
                 </td>
             </tr>
-
         </table>
     </div>
     <?php include "include/footer.php" ?>

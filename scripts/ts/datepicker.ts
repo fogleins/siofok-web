@@ -1,4 +1,10 @@
 namespace Datepicker {
+
+    enum Availability {
+        busy,
+        available
+    }
+
     let nextId: number = 0;
 
     /**
@@ -53,6 +59,26 @@ namespace Datepicker {
                 "maxDate": "2021. 09. 05."
             }, function (start: any, end: any, label: any) { // TODO: add the matching types
                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                $.ajax({
+                    method: "POST",
+                    url: "datepicker_xhr_handler.php",
+                    timeout: 5000,
+                    dataType: "json",
+                    data: {
+                        availability: Availability.available,
+                        start: start.format("YYYY-MM-DD"),
+                        end: end.format("YYYY-MM-DD")
+                    },
+                    // TODO feedback to user on success and on error
+                    success: function (response) {
+                        if (response.success) {
+                            console.log("Date range successfully saved");
+                        }
+                    },
+                    error: function (error) {
+                        console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
+                    }
+                });
             });
         });
     }
