@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="customStyles.css">
 <?php
     include_once "utils.php";
+    include "include/header.php";
     session_start();
     if (!isset($_SESSION['access_token'])) {
         echo "<h2 class='text-warning text-center' style='margin-top: 15%'>A folytatáshoz be kell jelentkezned.</h2>";
@@ -25,7 +26,6 @@
         http_response_code(403);
         die();
     }
-    include "include/header.php";
 ?>
 
 <div class="wrapper-div">

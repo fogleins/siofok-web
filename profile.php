@@ -27,9 +27,11 @@
 <div class="wrapper-div">
     <div class="floating-div col-sm-10 col-lg-6">
         <h3 class="text-secondary">Adatok</h3>
-        <table id="profile-data" class="table table-striped table-hover"></table>
+        <div class="table-responsive">
+            <table id="profile-data" class="table table-striped table-hover"></table>
+        </div>
         <h3 class="text-secondary mt-5">Tevékenységek</h3>
-        <div class="scrollable-table-container">
+        <div class="scrollable-table-container table-responsive">
             <table id="profile-activities" class="table table-striped table-hover"></table>
         </div>
     </div>

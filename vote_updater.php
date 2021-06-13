@@ -11,7 +11,7 @@
         // query all drinks ordered by vote count
         $result = $db->query("SELECT drinks.drink_ID, drinks.name, COUNT(drinks_votes.drink_ID) AS votes "
             . "FROM drinks LEFT OUTER JOIN drinks_votes ON drinks_votes.drink_ID = drinks.drink_ID "
-            . "GROUP BY drinks.drink_ID ORDER BY votes DESC;");
+            . "GROUP BY drinks.drink_ID ORDER BY votes DESC, name ASC;");
         while ($row = $result->fetch_row()) {
             // TODO: a fenti + ez a query egyesítése?
             // query user's votes
