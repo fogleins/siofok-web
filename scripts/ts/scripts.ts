@@ -37,6 +37,8 @@ function submitVote(userID: number, drinkID: number, action: VoteType): void {
                         BootstrapColors.success);
                     console.log("vote successfully removed");
                 }
+            } else {
+                Toast.showToast("Hiba", "A művelet során hiba lépett fel.", BootstrapColors.danger)
             }
         },
         "error": function (err: any) {

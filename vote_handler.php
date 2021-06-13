@@ -13,6 +13,13 @@
     try {
         $stmt = null;
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        // if the logged in user's id and the one sent in the request do not match, the vote is invalid, therefore
+        // we're not updating the database
+        if ($_POST["userId"] != $_SESSION["userId"]) {
+            echo json_encode(array("success" => false));
+            exit();
+        }
+
         if ($_POST['action'] == VoteType::drinkAddSuggestion) {
             // insert the suggested drink into the database
             $stmt = $db->prepare("INSERT INTO drinks (suggested_by, name) VALUES (?, ?)");
@@ -38,6 +45,19 @@
                     . Utils::getDrinkNameById($drinkId), $_SESSION["userId"]);
             }
         } else if ($_POST['action'] == VoteType::drinkAdd) {
+            // Make sure a user can only submit one vote for a drink
+            $stmt = $db->prepare("SELECT * FROM drinks_votes WHERE drink_ID = ? AND user_ID = ?");
+            $stmt->bind_param("ii", $_POST["drinkId"], $_SESSION["userId"]);
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                // if the user already submitted a vote for the given drink, we do nothing
+                if ($result->num_rows > 0) {
+                    $stmt->free_result();
+                    exit();
+                }
+                $stmt->free_result();
+            }
+
             $stmt = $db->prepare("INSERT INTO drinks_votes VALUES (?, ?)");
             $stmt->bind_param("ii", $_SESSION["userId"], $_POST['drinkId']);
             if (!$stmt->execute()) {
