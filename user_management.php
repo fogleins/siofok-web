@@ -19,7 +19,6 @@
                 $currentUserId = null;
                 $currentUserData = null;
                 $currentUserRoles = null; // the groups the user belongs to
-                $jsonLength = 0;
                 while ($row = $result->fetch_row()) {
                     if ($row[0] != $currentUserId) {
                         if ($currentUserData != null) {
@@ -31,7 +30,6 @@
                         $currentUserRoles = array();
                         $currentUserData["id"] = intval($row[0]);
                         $currentUserData["name"] = $row[1];
-                        $jsonLength++;
                     }
                     array_push($currentUserRoles, $row[2]);
                 }
@@ -40,7 +38,6 @@
                 }
                 array_push($users, $currentUserData);
                 $results["users"] = $users;
-                $results["length"] = $jsonLength;
                 $availableRoles = array();
                 $result = $db->query("SELECT name, usergroup_ID FROM usergroup");
                 while ($row = $result->fetch_row()) {

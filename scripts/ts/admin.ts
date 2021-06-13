@@ -28,7 +28,6 @@ namespace Admin {
      */
     interface ResponseData {
         users: UserData[];
-        length: number;
         availableRoles: RoleData[];
         success: boolean;
     }
@@ -48,7 +47,6 @@ namespace Admin {
             "type": "GET",
             "timeout": 5000,
             "dataType": "json",
-            "data": { },
             "success": function (data: ResponseData) {
                 if (data.success) {
                     availableRoles = data.availableRoles;
@@ -56,7 +54,7 @@ namespace Admin {
                         rolesForAutocomplete.push(availableRoles[i].name);
                     }
                     let table: HTMLTableElement = document.getElementById("user-management") as HTMLTableElement;
-                    for (let i = 0; i < data.length; i++) {
+                    for (let i = 0; i < data.users.length; i++) {
                         let row: HTMLTableRowElement = table.insertRow(i);
                         let j: number = 0;
                         for (const dataKey in data.users[i]) {
@@ -229,7 +227,7 @@ namespace Admin {
             success: function (data: ResponseData) {
                 if (data.success) {
                     let table: HTMLTableElement = document.getElementById("user-management") as HTMLTableElement;
-                    for (let i = 0; i < data.length; i++) {
+                    for (let i = 0; i < data.users.length; i++) {
                         let row: HTMLTableRowElement = table.querySelectorAll("tr")[i + 1];
                         let j: number = 0;
                         for (const dataKey in data.users[i]) {

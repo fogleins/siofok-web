@@ -17,7 +17,6 @@ var Admin;
             "type": "GET",
             "timeout": 5000,
             "dataType": "json",
-            "data": {},
             "success": function (data) {
                 if (data.success) {
                     availableRoles = data.availableRoles;
@@ -25,7 +24,7 @@ var Admin;
                         rolesForAutocomplete.push(availableRoles[i].name);
                     }
                     let table = document.getElementById("user-management");
-                    for (let i = 0; i < data.length; i++) {
+                    for (let i = 0; i < data.users.length; i++) {
                         let row = table.insertRow(i);
                         let j = 0;
                         for (const dataKey in data.users[i]) {
@@ -177,7 +176,7 @@ var Admin;
             success: function (data) {
                 if (data.success) {
                     let table = document.getElementById("user-management");
-                    for (let i = 0; i < data.length; i++) {
+                    for (let i = 0; i < data.users.length; i++) {
                         let row = table.querySelectorAll("tr")[i + 1];
                         let j = 0;
                         for (const dataKey in data.users[i]) {
