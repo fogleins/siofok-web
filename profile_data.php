@@ -2,6 +2,11 @@
     include "utils.php";
     session_start();
 
+    if (!isset($_SESSION["access_token"])) {
+        echo json_encode(array("success" => false));
+        exit();
+    }
+
     $db = Utils::getDbObject();
     try {
         $results = array();
