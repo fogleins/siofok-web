@@ -98,14 +98,79 @@ namespace Datepicker {
          */
         $("#date-add").on("click", function () {
             document.getElementById("date-add").textContent = "Hozzáadás";
-            let table: HTMLTableElement = document.getElementById("date-picker-table") as HTMLTableElement;
-            let row = table.insertRow(table.rows.length - 1);
-            let cell = row.insertCell(0);
-            let textField: HTMLInputElement = document.createElement("input");
-            textField.type = "text";
-            textField.classList.add("form-control")
-            initDatePicker(textField);
-            cell.appendChild(textField);
+            addInputRow();
         })
     })
+
+    /**
+     * Adds a row to the table with a form group consisting of an input field and a delete button.
+     * @private
+     */
+    function addInputRow() {
+        let table: HTMLTableElement = document.getElementById("date-picker-table") as HTMLTableElement;
+        let row = table.insertRow(table.rows.length - 1);
+        let cell = row.insertCell(0);
+        let div = document.createElement("div");
+        div.id = `form-group-${nextId}`;
+        div.classList.add("input-group");
+        let textField: HTMLInputElement = document.createElement("input");
+        textField.type = "text";
+        textField.classList.add("form-control");
+        let button = document.createElement("button");
+        button.classList.add("btn", "btn-outline-danger");
+        button.setAttribute("data-for-textfield", `rangePicker${nextId}`);
+        button.setAttribute("data-parent", div.id);
+        let btnId = `delete-btn-for-rangePicker${nextId}`;
+        button.id = btnId;
+        button.textContent = "Törlés";
+        initDatePicker(textField);
+        div.appendChild(textField);
+        div.appendChild(button);
+        cell.appendChild(div);
+        $(`#${btnId}`).on("click", () => removeInputRow(button));
+    }
+
+    /**
+     * Removes the selected row and its related data.
+     * @param initiatingButton The button the user clicked on to delete the data.
+     * @private
+     */
+    function removeInputRow(initiatingButton: HTMLButtonElement) {
+        let textfieldId: string = initiatingButton.getAttribute("data-for-textfield");
+        let textfield = document.getElementById(textfieldId);
+        let recordId: string = textfield.getAttribute("data-recordId");
+        // if the field is associated with a given record, we need to remove its data from the database
+        if (recordId != null) {
+            $.ajax({
+                url: "datepicker_xhr_handler.php",
+                method: "POST",
+                timeout: 5000,
+                dataType: "json",
+                data: {
+                    userId: USER_ID,
+                    action: "delete",
+                    recordId: recordId
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Toast.showToast("Sikeres törlés",
+                            "A kiválasztott időintervallum sikeresen törölve lett.", BootstrapColors.success);
+                    } else {
+                        Toast.showToast("Hiba", "A kiválasztott időintervallum törölése során " +
+                            "hiba lépett fel.", BootstrapColors.danger);
+                    }
+                },
+                error: function (err) {
+                    Toast.showToast("Hiba", "A kiválasztott időintervallum törölése során " +
+                        "hiba lépett fel.", BootstrapColors.danger);
+                }
+            })
+        }
+        // remove the elements from the document
+        let parentId = initiatingButton.getAttribute("data-parent");
+        let parent = document.getElementById(parentId);
+        let row = parent.parentElement;
+        let table = row.parentElement;
+        table.removeChild(row);
+    }
 }

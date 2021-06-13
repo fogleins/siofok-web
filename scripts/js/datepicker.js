@@ -52,7 +52,6 @@ var Datepicker;
                 "minDate": "2021. 06. 12.",
                 "maxDate": "2021. 09. 05."
             }, function (start, end, label) {
-                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
                 $.ajax({
                     method: "POST",
                     url: "datepicker_xhr_handler.php",
@@ -87,15 +86,67 @@ var Datepicker;
     $(() => {
         $("#date-add").on("click", function () {
             document.getElementById("date-add").textContent = "Hozzáadás";
-            let table = document.getElementById("date-picker-table");
-            let row = table.insertRow(table.rows.length - 1);
-            let cell = row.insertCell(0);
-            let textField = document.createElement("input");
-            textField.type = "text";
-            textField.classList.add("form-control");
-            initDatePicker(textField);
-            cell.appendChild(textField);
+            addInputRow();
         });
     });
+    function addInputRow() {
+        let table = document.getElementById("date-picker-table");
+        let row = table.insertRow(table.rows.length - 1);
+        let cell = row.insertCell(0);
+        let div = document.createElement("div");
+        div.id = `form-group-${nextId}`;
+        div.classList.add("input-group");
+        let textField = document.createElement("input");
+        textField.type = "text";
+        textField.classList.add("form-control");
+        let button = document.createElement("button");
+        button.classList.add("btn", "btn-outline-danger");
+        button.setAttribute("data-for-textfield", `rangePicker${nextId}`);
+        button.setAttribute("data-parent", div.id);
+        let btnId = `delete-btn-for-rangePicker${nextId}`;
+        button.id = btnId;
+        button.textContent = "Törlés";
+        initDatePicker(textField);
+        div.appendChild(textField);
+        div.appendChild(button);
+        cell.appendChild(div);
+        $(`#${btnId}`).on("click", () => removeInputRow(button));
+    }
+    function removeInputRow(initiatingButton) {
+        let textfieldId = initiatingButton.getAttribute("data-for-textfield");
+        let textfield = document.getElementById(textfieldId);
+        let recordId = textfield.getAttribute("data-recordId");
+        if (recordId != null) {
+            $.ajax({
+                url: "datepicker_xhr_handler.php",
+                method: "POST",
+                timeout: 5000,
+                dataType: "json",
+                data: {
+                    userId: USER_ID,
+                    action: "delete",
+                    recordId: recordId
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Toast.showToast("Sikeres törlés", "A kiválasztott időintervallum sikeresen törölve lett.", BootstrapColors.success);
+                    }
+                    else {
+                        Toast.showToast("Hiba", "A kiválasztott időintervallum törölése során " +
+                            "hiba lépett fel.", BootstrapColors.danger);
+                    }
+                },
+                error: function (err) {
+                    Toast.showToast("Hiba", "A kiválasztott időintervallum törölése során " +
+                        "hiba lépett fel.", BootstrapColors.danger);
+                }
+            });
+        }
+        let parentId = initiatingButton.getAttribute("data-parent");
+        let parent = document.getElementById(parentId);
+        let row = parent.parentElement;
+        let table = row.parentElement;
+        table.removeChild(row);
+    }
 })(Datepicker || (Datepicker = {}));
 //# sourceMappingURL=datepicker.js.map

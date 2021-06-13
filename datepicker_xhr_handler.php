@@ -54,6 +54,10 @@
                 $recordId = $result->fetch_row()[0];
             }
             echo json_encode(array("success" => $success, "recordId" => $recordId));
+        } else if (isset($_POST["action"]) && $_POST["action"] == "delete") {
+            $stmt = $db->prepare("DELETE FROM datepicker_responses WHERE response_ID = ?");
+            $stmt->bind_param("i", $_POST["recordId"]);
+            echo json_encode(array("success" => $stmt->execute()));
         } else /* if editing the range */ {
             $stmt = $db->prepare("UPDATE datepicker_responses SET start_date = ?, end_date = ? WHERE response_ID = ?");
             $stmt->bind_param("ssi", $_POST["start"], $_POST["end"], $_POST["recordId"]);
