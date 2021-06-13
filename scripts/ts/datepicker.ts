@@ -10,9 +10,11 @@ namespace Datepicker {
     /**
      * Initializes the element to show a date range picker on click.
      * @param element The element to which the date range picker should be added.
+     * @param startDate The start of the range selected by default, optional.
+     * @param endDate The end of the range selected by default, optional.
      * @private
      */
-    function initDatePicker(element: HTMLInputElement) {
+    function initDatePicker(element: HTMLInputElement, startDate?: string, endDate?: string) {
         let fieldID: string = "rangePicker" + nextId;
         element.id = fieldID;
         nextId++;
@@ -56,7 +58,9 @@ namespace Datepicker {
                     "firstDay": 1
                 },
                 "minDate": "2021. 06. 12.",
-                "maxDate": "2021. 09. 05."
+                "maxDate": "2021. 09. 05.",
+                "startDate": startDate,
+                "endDate": endDate
             }, function (start: any, end: any, label: any) { // TODO: add the matching types
                 $.ajax({
                     method: "POST",
@@ -91,7 +95,7 @@ namespace Datepicker {
         });
     }
 
-    $(() => {
+    $(async () => {
         /**
          * Event handler for the add button. Adds a row to the table and inside the cell, adds a text field and
          * initializes it to show a date range picker on click.
@@ -100,30 +104,55 @@ namespace Datepicker {
             document.getElementById("date-add").textContent = "Hozzáadás";
             addInputRow();
         })
+        if (USER_ID == null) {
+            await getUserId();
+        }
+        $.ajax({
+            url: "datepicker_xhr_handler.php",
+            method: "GET",
+            timeout: 5000,
+            dataType: "json",
+            data: {
+                userId: USER_ID,
+                action: "query"
+            },
+            success: function (response) {
+                if (response.success) {
+                    for (let i = 0; i < response.data.length; i++) {
+                        // TODO: match locale format
+                        addInputRow(response.data[i][0], response.data[i][1], response.data[i][2]);
+                    }
+                }
+            }
+        })
     })
 
     /**
      * Adds a row to the table with a form group consisting of an input field and a delete button.
      * @private
      */
-    function addInputRow() {
+    function addInputRow(recordId?: number, startDate?: string, endDate?: string) {
+        let id: number = nextId;
+        if (recordId != null) {
+            id = recordId;
+        }
         let table: HTMLTableElement = document.getElementById("date-picker-table") as HTMLTableElement;
         let row = table.insertRow(table.rows.length - 1);
         let cell = row.insertCell(0);
         let div = document.createElement("div");
-        div.id = `form-group-${nextId}`;
+        div.id = `form-group-${id}`;
         div.classList.add("input-group");
         let textField: HTMLInputElement = document.createElement("input");
         textField.type = "text";
         textField.classList.add("form-control");
         let button = document.createElement("button");
         button.classList.add("btn", "btn-outline-danger");
-        button.setAttribute("data-for-textfield", `rangePicker${nextId}`);
+        button.setAttribute("data-for-textfield", `rangePicker${id}`);
         button.setAttribute("data-parent", div.id);
-        let btnId = `delete-btn-for-rangePicker${nextId}`;
+        let btnId = `delete-btn-for-rangePicker${id}`;
         button.id = btnId;
         button.textContent = "Törlés";
-        initDatePicker(textField);
+        initDatePicker(textField, startDate, endDate);
         div.appendChild(textField);
         div.appendChild(button);
         cell.appendChild(div);

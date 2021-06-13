@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var Datepicker;
 (function (Datepicker) {
     let Availability;
@@ -6,7 +15,7 @@ var Datepicker;
         Availability[Availability["available"] = 1] = "available";
     })(Availability || (Availability = {}));
     let nextId = 0;
-    function initDatePicker(element) {
+    function initDatePicker(element, startDate, endDate) {
         let fieldID = "rangePicker" + nextId;
         element.id = fieldID;
         nextId++;
@@ -50,7 +59,9 @@ var Datepicker;
                     "firstDay": 1
                 },
                 "minDate": "2021. 06. 12.",
-                "maxDate": "2021. 09. 05."
+                "maxDate": "2021. 09. 05.",
+                "startDate": startDate,
+                "endDate": endDate
             }, function (start, end, label) {
                 $.ajax({
                     method: "POST",
@@ -83,30 +94,54 @@ var Datepicker;
             });
         });
     }
-    $(() => {
+    $(() => __awaiter(this, void 0, void 0, function* () {
         $("#date-add").on("click", function () {
             document.getElementById("date-add").textContent = "Hozzáadás";
             addInputRow();
         });
-    });
-    function addInputRow() {
+        if (USER_ID == null) {
+            yield getUserId();
+        }
+        $.ajax({
+            url: "datepicker_xhr_handler.php",
+            method: "GET",
+            timeout: 5000,
+            dataType: "json",
+            data: {
+                userId: USER_ID,
+                action: "query"
+            },
+            success: function (response) {
+                if (response.success) {
+                    for (let i = 0; i < response.data.length; i++) {
+                        addInputRow(response.data[i][0], response.data[i][1], response.data[i][2]);
+                    }
+                }
+            }
+        });
+    }));
+    function addInputRow(recordId, startDate, endDate) {
+        let id = nextId;
+        if (recordId != null) {
+            id = recordId;
+        }
         let table = document.getElementById("date-picker-table");
         let row = table.insertRow(table.rows.length - 1);
         let cell = row.insertCell(0);
         let div = document.createElement("div");
-        div.id = `form-group-${nextId}`;
+        div.id = `form-group-${id}`;
         div.classList.add("input-group");
         let textField = document.createElement("input");
         textField.type = "text";
         textField.classList.add("form-control");
         let button = document.createElement("button");
         button.classList.add("btn", "btn-outline-danger");
-        button.setAttribute("data-for-textfield", `rangePicker${nextId}`);
+        button.setAttribute("data-for-textfield", `rangePicker${id}`);
         button.setAttribute("data-parent", div.id);
-        let btnId = `delete-btn-for-rangePicker${nextId}`;
+        let btnId = `delete-btn-for-rangePicker${id}`;
         button.id = btnId;
         button.textContent = "Törlés";
-        initDatePicker(textField);
+        initDatePicker(textField, startDate, endDate);
         div.appendChild(textField);
         div.appendChild(button);
         cell.appendChild(div);

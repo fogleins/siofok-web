@@ -3,8 +3,10 @@
 
     // if the logged in user's id and the one sent in the request do not match, the vote is invalid, therefore
     // we're not updating the database
-    if ($_POST["userId"] != $_SESSION["userId"]) {
+    if (($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["userId"] != $_SESSION["userId"])
+        || ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET["userId"] != $_SESSION["userId"])) {
         echo json_encode(array("success" => false));
+        echo "rip";
         exit();
     }
 
@@ -13,7 +15,7 @@
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $stmt = null;
         // if a new record will be saved
-        if ($_POST["recordId"] == null) {
+        if (isset($_POST["recordId"]) && $_POST["recordId"] == null) {
             // make sure that the user cannot add the same range multiple times
             $stmt = $db->prepare("SELECT response_ID FROM datepicker_responses WHERE user_ID = ? "
                 . "AND start_date BETWEEN ? AND ? OR end_date BETWEEN ? AND ? "
@@ -58,6 +60,11 @@
             $stmt = $db->prepare("DELETE FROM datepicker_responses WHERE response_ID = ?");
             $stmt->bind_param("i", $_POST["recordId"]);
             echo json_encode(array("success" => $stmt->execute()));
+        } else if (isset($_GET["action"]) && $_GET["action"] == "query") {
+            $result = $db->query("SELECT response_ID, start_date, end_date FROM datepicker_responses "
+                . " WHERE user_ID = " . $_SESSION['userId']);
+            $result = $result->fetch_all(MYSQLI_ASSOC);
+            echo json_encode(array("success" => $result != false, "data" => $result));
         } else /* if editing the range */ {
             $stmt = $db->prepare("UPDATE datepicker_responses SET start_date = ?, end_date = ? WHERE response_ID = ?");
             $stmt->bind_param("ssi", $_POST["start"], $_POST["end"], $_POST["recordId"]);

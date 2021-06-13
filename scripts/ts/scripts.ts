@@ -27,20 +27,35 @@ $(() => {
         }
     }
     if (USER_ID == null) {
-        $.ajax({
-            url: "user_data.php",
-            timeout: 5000,
-            method: "GET",
-            dataType: "json",
-            success: function (data) {
-                if (data.success) {
-                    USER_ID = data.userId;
-                    console.log(USER_ID);
-                }
-            }
-        })
+        // $.ajax({
+        //     async: false,
+        //     url: "user_data.php",
+        //     timeout: 5000,
+        //     method: "GET",
+        //     dataType: "json",
+        //     success: function (data) {
+        //         if (data.success) {
+        //             USER_ID = data.userId;
+        //         }
+        //     }
+        // })
+        getUserId();
     }
 });
+
+async function getUserId() {
+    await $.ajax({
+        url: "user_data.php",
+        timeout: 5000,
+        method: "GET",
+        dataType: "json",
+        success: await function (data: any) {
+            if (data.success) {
+                USER_ID = data.userId;
+            }
+        }
+    })
+}
 
 function loadProfileData(): void {
     $.ajax({
