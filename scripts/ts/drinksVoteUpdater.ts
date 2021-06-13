@@ -120,8 +120,9 @@ class DrinksVoteUpdater {
         await this.update();
 
         let suggestion: string = (document.getElementById("drink-suggestion") as HTMLInputElement).value.trim();
-        if (suggestion == null || suggestion == "") {
-            Toast.showToast("Hiba", "Nem adtál meg értéket.", BootstrapColors.warning);
+        if (suggestion == null || suggestion == "" || suggestion.length > 200) {
+            Toast.showToast("Hiba", "Nem adtál meg értéket vagy túl hosszú a megadott ital neve.",
+                BootstrapColors.warning);
             return;
         }
         let rows = (document.getElementById("drinks-table") as HTMLTableElement).rows;

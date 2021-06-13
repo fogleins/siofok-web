@@ -74,6 +74,9 @@ class Utils
      * @return bool True, if the user has permission to access the page, false otherwise.
      */
     public static function requireRole(string $requiredRole): bool {
+        if (!isset($_SESSION["access_token"])) {
+            return false;
+        }
         $db = Utils::getDbObject();
         $roles = array();
         try {

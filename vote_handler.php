@@ -16,7 +16,7 @@
         if ($_POST['action'] == VoteType::drinkAddSuggestion) {
             // insert the suggested drink into the database
             $stmt = $db->prepare("INSERT INTO drinks (suggested_by, name) VALUES (?, ?)");
-            $stmt->bind_param("is", $_POST['userId'], $_POST['drinkName']);
+            $stmt->bind_param("is", $_SESSION['userId'], $_POST['drinkName']);
             if (!$stmt->execute()) {
                 echo json_encode(array("success" => false));
                 exit();
@@ -29,32 +29,32 @@
                 $drinkId = $stmt->get_result()->fetch_row()[0];
                 $stmt->free_result();
                 $stmt = $db->prepare("INSERT INTO drinks_votes VALUES (?, ?)");
-                $stmt->bind_param("ii", $_POST['userId'], $drinkId);
+                $stmt->bind_param("ii", $_SESSION["userId"], $drinkId);
                 if ($stmt->execute()) {
                     $stmt->store_result();
                     $stmt->free_result();
                 }
                 Utils::logEvent(LogType::INFO(), "Italjavaslat hozzáadva: "
-                    . Utils::getDrinkNameById($drinkId), $_POST['userId']);
+                    . Utils::getDrinkNameById($drinkId), $_SESSION["userId"]);
             }
         } else if ($_POST['action'] == VoteType::drinkAdd) {
             $stmt = $db->prepare("INSERT INTO drinks_votes VALUES (?, ?)");
-            $stmt->bind_param("ii", $_POST['userId'], $_POST['drinkId']);
+            $stmt->bind_param("ii", $_SESSION["userId"], $_POST['drinkId']);
             if (!$stmt->execute()) {
                 echo json_encode(array("success" => false));
                 exit();
             }
             Utils::logEvent(LogType::INFO(), "Italszavazás: szavazat hozzáadva: "
-                . Utils::getDrinkNameById($_POST['drinkId']), $_POST['userId']);
+                . Utils::getDrinkNameById($_POST['drinkId']), $_SESSION["userId"]);
         } else if ($_POST['action'] == VoteType::drinkRemove) {
             $stmt = $db->prepare("DELETE FROM drinks_votes WHERE user_ID = ? AND drink_ID = ?");
-            $stmt->bind_param("ii", $_POST['userId'], $_POST['drinkId']);
+            $stmt->bind_param("ii", $_SESSION["userId"], $_POST['drinkId']);
             if (!$stmt->execute()) {
                 echo json_encode(array("success" => false));
                 exit();
             }
             Utils::logEvent(LogType::INFO(), "Italszavazás: szavazat eltávolítva: "
-                . Utils::getDrinkNameById($_POST['drinkId']), $_POST['userId']);
+                . Utils::getDrinkNameById($_POST['drinkId']), $_SESSION["userId"]);
         }
         echo json_encode(array("success" => true));
     } catch (Exception $exception) {
