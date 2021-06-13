@@ -58,7 +58,6 @@ namespace Datepicker {
                 "minDate": "2021. 06. 12.",
                 "maxDate": "2021. 09. 05."
             }, function (start: any, end: any, label: any) { // TODO: add the matching types
-                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
                 $.ajax({
                     method: "POST",
                     url: "datepicker_xhr_handler.php",
@@ -68,15 +67,23 @@ namespace Datepicker {
                         userId: USER_ID,
                         availability: Availability.available,
                         start: start.format("YYYY-MM-DD"),
-                        end: end.format("YYYY-MM-DD")
+                        end: end.format("YYYY-MM-DD"),
+                        recordId: element.getAttribute("data-recordId")
                     },
-                    // TODO feedback to user on success and on error
                     success: function (response) {
                         if (response.success) {
-                            console.log("Date range successfully saved");
+                            Toast.showToast("Sikeres mentés", "A megadott időszak mentve.",
+                                BootstrapColors.success);
+                            if (element.getAttribute("data-recordId") == null) {
+                                element.setAttribute("data-recordId", response.recordId);
+                            }
+                        } else {
+                            Toast.showToast("Hiba", response.message, BootstrapColors.danger);
                         }
                     },
                     error: function (error) {
+                        Toast.showToast("Hiba",
+                            "Az AJAX-kérés során hiba lépett fel. Részletek a konzolon.", BootstrapColors.danger);
                         console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
                     }
                 });

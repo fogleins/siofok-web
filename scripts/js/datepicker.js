@@ -62,14 +62,22 @@ var Datepicker;
                         userId: USER_ID,
                         availability: Availability.available,
                         start: start.format("YYYY-MM-DD"),
-                        end: end.format("YYYY-MM-DD")
+                        end: end.format("YYYY-MM-DD"),
+                        recordId: element.getAttribute("data-recordId")
                     },
                     success: function (response) {
                         if (response.success) {
-                            console.log("Date range successfully saved");
+                            Toast.showToast("Sikeres mentés", "A megadott időszak mentve.", BootstrapColors.success);
+                            if (element.getAttribute("data-recordId") == null) {
+                                element.setAttribute("data-recordId", response.recordId);
+                            }
+                        }
+                        else {
+                            Toast.showToast("Hiba", response.message, BootstrapColors.danger);
                         }
                     },
                     error: function (error) {
+                        Toast.showToast("Hiba", "Az AJAX-kérés során hiba lépett fel. Részletek a konzolon.", BootstrapColors.danger);
                         console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
                     }
                 });

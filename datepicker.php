@@ -23,7 +23,13 @@
 <script type="text/javascript" src="include/dateRangePicker/moment.min.js"></script>
 <script type="text/javascript" src="include/dateRangePicker/daterangepicker.min.js"></script>
 <script type="text/javascript" src="scripts/js/datepicker.js"></script>
+<script type="text/javascript" src="scripts/js/toast.js"></script>
 <link rel="stylesheet" href="include/dateRangePicker/daterangepicker.css"/>
+<!-- toasts begin -->
+<div aria-live="polite" aria-atomic="true" class="position-fixed" id="toasts-parent">
+    <div class="toast-container position-absolute top-0 end-0 p-3" id="toasts"></div>
+</div>
+<!-- toasts end -->
 <div class="wrapper-div">
     <div class="text-center h2-top-center-margin">
         <h2 class="text-primary">Időpontválasztás</h2>
