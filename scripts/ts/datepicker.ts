@@ -65,6 +65,7 @@ namespace Datepicker {
                     timeout: 5000,
                     dataType: "json",
                     data: {
+                        userId: USER_ID,
                         availability: Availability.available,
                         start: start.format("YYYY-MM-DD"),
                         end: end.format("YYYY-MM-DD")

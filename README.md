@@ -22,6 +22,7 @@
             Pixabay's tag editor jQuery plugin</a>
     </li>
     <li><a href="https://github.com/accursoft/caret">Accursoft's caret jQuery plugin</a> </li>
+    <li><a href="https://www.daterangepicker.com/">DateRangePicker</a></li>
 </ul>
 A file named <code>config.php</code> containing credentials for 
 database- and Google login handling is needed in 

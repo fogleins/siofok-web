@@ -48,11 +48,9 @@ function loadProfileData(): void {
         "type": "GET",
         "timeout": 5000,
         "dataType": "json",
-        "data": {},
         "success": function (data: any) {
             if (data.success) {
                 let table: HTMLTableElement = document.getElementById("profile-data") as HTMLTableElement;
-                // for (let i = 0; i < data.length; i++) {
                 let i = 0;
                 for (const dataKey in data) {
                     if (data.hasOwnProperty(dataKey) && dataKey != "success") {
@@ -66,7 +64,7 @@ function loadProfileData(): void {
                                 }
                             }
                             let thead: HTMLTableSectionElement = table.tHead = document.createElement("thead");
-                            thead.innerHTML = "<tr><th>Idő (legújabb elöl)</th><th>Leírás</th></tr>";
+                            thead.innerHTML = "<tr><th style='min-width: 20ch'>Idő (legújabb elöl)</th><th>Leírás</th></tr>";
                         } else {
                             let row: HTMLTableRowElement = table.insertRow(i);
                             for (let j = 0; j < 2; j++) {

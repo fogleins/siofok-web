@@ -59,6 +59,7 @@ var Datepicker;
                     timeout: 5000,
                     dataType: "json",
                     data: {
+                        userId: USER_ID,
                         availability: Availability.available,
                         start: start.format("YYYY-MM-DD"),
                         end: end.format("YYYY-MM-DD")
@@ -82,7 +83,6 @@ var Datepicker;
             let row = table.insertRow(table.rows.length - 1);
             let cell = row.insertCell(0);
             let textField = document.createElement("input");
-            textField.setAttribute("for-response", "ide az id jön");
             textField.type = "text";
             textField.classList.add("form-control");
             initDatePicker(textField);

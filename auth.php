@@ -64,7 +64,6 @@
         $_SESSION['fullName'] = $result[4];
         $_SESSION['pictureLink'] = $result[5];
         $_SESSION['googleId'] = $result[6];
-        $_SESSION['isAdmin'] = $result[7];
 
         // if the user logs in for the first time, a default 'user' role will be granted to them
         if ($newUser) {

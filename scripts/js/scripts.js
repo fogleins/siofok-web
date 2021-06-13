@@ -42,7 +42,6 @@ function loadProfileData() {
         "type": "GET",
         "timeout": 5000,
         "dataType": "json",
-        "data": {},
         "success": function (data) {
             if (data.success) {
                 let table = document.getElementById("profile-data");
@@ -59,7 +58,7 @@ function loadProfileData() {
                                 }
                             }
                             let thead = table.tHead = document.createElement("thead");
-                            thead.innerHTML = "<tr><th>Idő (legújabb elöl)</th><th>Leírás</th></tr>";
+                            thead.innerHTML = "<tr><th style='min-width: 20ch'>Idő (legújabb elöl)</th><th>Leírás</th></tr>";
                         }
                         else {
                             let row = table.insertRow(i);
