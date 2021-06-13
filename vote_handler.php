@@ -6,7 +6,6 @@
         const drinkAdd = 0;
         const drinkRemove = 1;
         const drinkAddSuggestion = 2;
-        const other = 3; // todo
     }
 
     $db = Utils::getDbObject();

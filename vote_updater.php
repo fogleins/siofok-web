@@ -13,13 +13,12 @@
             . "FROM drinks LEFT OUTER JOIN drinks_votes ON drinks_votes.drink_ID = drinks.drink_ID "
             . "GROUP BY drinks.drink_ID ORDER BY votes DESC, name ASC;");
         while ($row = $result->fetch_row()) {
-            // TODO: a fenti + ez a query egyesítése?
             // query user's votes
             $stmt = $db->prepare("SELECT COUNT(*) FROM drinks_votes WHERE user_ID = ? AND drink_ID = ?");
             if (!$stmt) {
                 throw new Exception("Cannot prepare sql query");
             }
-            $stmt->bind_param("ii", $_POST['userId'], $row[0]);
+            $stmt->bind_param("ii", $_SESSION['userId'], $row[0]);
             if ($stmt->execute()) {
                 $stmt->bind_result($userVoteCount);
                 $stmt->fetch();

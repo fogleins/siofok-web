@@ -7,10 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Italok</title>
 </head>
-<!-- jQuery, the bootstrap js api, and scripts/js/scripts.js will be included by including 'include/header.php' below -->
-<script src="scripts/js/toast.js"></script>
-<script src="scripts/js/drinksVoteUpdater.js"></script>
-
 <?php
     include_once "utils.php";
     session_start();
@@ -31,12 +27,10 @@
     }
     include "include/header.php";
 ?>
-<script type="text/javascript">
-    function onLoad() {
-        DrinksVoteUpdater.instance.userId = <?php echo $_SESSION['userId']; ?>;
-    }
-</script>
-<body onload="onLoad()">
+<!-- jQuery, the bootstrap js api, and scripts/js/scripts.js will be included by including 'include/header.php' below -->
+<script src="scripts/js/toast.js"></script>
+<script src="scripts/js/drinks.js"></script>
+<body>
 <!-- div for toasts -->
 <div aria-live="polite" aria-atomic="true" class="position-fixed" id="toasts-parent">
     <!-- - `.toast-container` for spacing between toasts -->
@@ -45,20 +39,19 @@
     <div class="toast-container position-absolute top-0 end-0 p-3" id="toasts"></div>
 </div>
 <div class="wrapper-div">
-<div class="text-center h2-top-center-margin">
-    <h2 class='text-primary'>Italszavazás</h2>
-    <h6 id="drinks-subtitle" class='text-subtitle'></h6>
-</div>
-<div class="floating-div col-sm-8 col-lg-5" id="votes-div">
-    <?php
-        echo "<h5 class='text-center text-secondary' style='margin-bottom: 8%' id='drinks-no-data' hidden> "
-            . "<i>Nincs megjelenítendő adat</i></h5>";
-        include "include/vote_suggestion_control.html";
-        echo "<table class='table table-hover' id='drinks-table'></table>";
-    ?>
-</div>
-<?php include "include/footer.php"; ?>
+    <div class="text-center h2-top-center-margin">
+        <h2 class='text-primary'>Italszavazás</h2>
+        <h6 id="drinks-subtitle" class='text-subtitle'></h6>
+    </div>
+    <div class="floating-div col-sm-8 col-lg-5" id="votes-div">
+        <?php
+            echo "<h5 class='text-center text-secondary' style='margin-bottom: 8%' id='drinks-no-data' hidden> "
+                . "<i>Nincs megjelenítendő adat</i></h5>";
+            include "include/vote_suggestion_control.html";
+            echo "<table class='table table-hover' id='drinks-table'></table>";
+        ?>
+    </div>
+    <?php include "include/footer.php"; ?>
 </div>
 </body>
 </html>
-

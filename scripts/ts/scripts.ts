@@ -1,10 +1,3 @@
-enum VoteType {
-    drinkAdd,
-    drinkRemove,
-    drinkAddSuggestion,
-    other // todo
-}
-
 enum BootstrapColors {
     primary = "#007aff",
     secondary = "#6c757d",
@@ -13,43 +6,11 @@ enum BootstrapColors {
     danger = "#dc3545"
 }
 
-let USER_ID: number = null;
-
-function submitVote(userID: number, drinkID: number, action: VoteType): void {
-    $.ajax({
-        "url": "vote_handler.php",
-        "type": "POST",
-        "timeout": 5000,
-        "dataType": "json",
-        "data": {
-            action: action,
-            userId: userID,
-            drinkId: drinkID
-        },
-        "success": function (data: any) {
-            if (data.success) {
-                if (action == VoteType.drinkAdd) {
-                    Toast.showToast("Sikeres művelet", "Szavazatod sikeresen rögzítésre került.",
-                        BootstrapColors.success);
-                    console.log("vote successfully saved");
-                } else if (action == VoteType.drinkRemove) {
-                    Toast.showToast("Sikeres művelet", "Szavazatod sikeresen törlésre került.",
-                        BootstrapColors.success);
-                    console.log("vote successfully removed");
-                }
-            } else {
-                Toast.showToast("Hiba", "A művelet során hiba lépett fel.", BootstrapColors.danger)
-            }
-        },
-        "error": function (err: any) {
-            Toast.showToast("Hiba", "A művelet során hiba lépett fel.", BootstrapColors.danger);
-            console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
-        }
-    });
-}
+let USER_ID: number;
 
 /**
- * Sets the page's link in the header active when a page loads.
+ * Called when a page was loaded. Sets the page's link in the header active when a page loads. Sets the user id if it's
+ * not set yet.
  */
 $(() => {
     // set the active state for nav-links and dropdown-items as needed
@@ -64,6 +25,20 @@ $(() => {
         } else if (navLink.classList.contains("active")) {
             navLink.classList.remove("active");
         }
+    }
+    if (USER_ID == null) {
+        $.ajax({
+            url: "user_data.php",
+            timeout: 5000,
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    USER_ID = data.userId;
+                    console.log(USER_ID);
+                }
+            }
+        })
     }
 });
 

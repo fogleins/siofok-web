@@ -1,53 +1,74 @@
-class DrinksVoteUpdater {
+namespace Drinks {
+
+    enum VoteType {
+        drinkAdd,
+        drinkRemove,
+        drinkAddSuggestion
+    }
+
     // The number of seconds between updates
-    private _interval: number;
-    private _userID: number;
-    private static _instance: DrinksVoteUpdater = new DrinksVoteUpdater();
+    let updateInterval: number = 30;
 
-    static get instance() {
-        return DrinksVoteUpdater._instance;
-    }
-
-    /**
-     * Creates a DrinksVoteUpdater object.
-     * @param interval The number of seconds between updates.
-     */
-    private constructor(interval: number = 30) {
-        this._interval = interval;
-    }
-
-    set userId(value: number) {
-        this._userID = value;
-        this.update();
-        window.setInterval(this.update, this._interval * 1000);
-    }
-
-    get userId() {
-        return this._userID;
-    }
-
-    get interval() {
-        return this._interval;
-    }
+    // called when the page has been loaded
+    $(() => {
+        // update the table and set the update timer
+        update().then(() => window.setInterval(update, updateInterval * 1000));
+        $("#add-suggestion-btn").on("click", function () {
+            addSuggestion();
+        })
+    })
 
     /**
-     * @param value The number of seconds between updates.
+     * Adds or removes a vote from a drink.
+     * @param drinkID The ID of the drink to add or remove the vote to/from
+     * @param action The type of action: should be VoteType.drinkAdd or VoteType.drinkRemove
+     * @private
      */
-    set interval(value: number) {
-        this._interval = value;
-    }
-
-    async update() {
-        document.getElementById("drinks-subtitle").textContent
-            = `Az adatok ${DrinksVoteUpdater.instance.interval} másodpercenként automatikusan frissülnek`;
-        return $.ajax({
-            "url": "vote_updater.php",
+    function submitVote(drinkID: number, action: VoteType): void {
+        $.ajax({
+            "url": "vote_handler.php",
             "type": "POST",
             "timeout": 5000,
             "dataType": "json",
             "data": {
-                userId: DrinksVoteUpdater.instance.userId
+                action: action,
+                userId: USER_ID,
+                drinkId: drinkID
             },
+            "success": function (data: any) {
+                if (data.success) {
+                    if (action == VoteType.drinkAdd) {
+                        Toast.showToast("Sikeres művelet", "Szavazatod sikeresen rögzítésre került.",
+                            BootstrapColors.success);
+                        console.log("vote successfully saved");
+                    } else if (action == VoteType.drinkRemove) {
+                        Toast.showToast("Sikeres művelet", "Szavazatod sikeresen törlésre került.",
+                            BootstrapColors.success);
+                        console.log("vote successfully removed");
+                    }
+                } else {
+                    Toast.showToast("Hiba", "A művelet során hiba lépett fel.", BootstrapColors.danger)
+                }
+            },
+            "error": function (err: any) {
+                Toast.showToast("Hiba", "A művelet során hiba lépett fel.", BootstrapColors.danger);
+                console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
+            }
+        });
+    }
+
+    /**
+     * Updates the table.
+     * @private
+     */
+    async function update() {
+        document.getElementById("drinks-subtitle").textContent
+            = `Az adatok ${updateInterval} másodpercenként automatikusan frissülnek`;
+        return $.ajax({
+            "url": "vote_updater.php",
+            "type": "GET",
+            "timeout": 5000,
+            "dataType": "json",
             "success": function (data: any) {
                 let table: HTMLTableElement = document.getElementById("drinks-table") as HTMLTableElement;
                 if (data.length == 0) {
@@ -92,16 +113,18 @@ class DrinksVoteUpdater {
                     }
                     (document.getElementById("drinks-plus-btn-" + i) as HTMLButtonElement)
                         .disabled = data[i][3];
-                    document.getElementById(("drinks-plus-btn-" + i)).onclick = function () {
-                        submitVote(DrinksVoteUpdater.instance.userId, data[i][0], VoteType.drinkAdd);
-                        DrinksVoteUpdater.instance.update();
-                    };
+                    // remove previously added click event handler, and add a new
+                    $(`#drinks-plus-btn-${i}`).off("click").on("click", function () {
+                        submitVote(data[i][0], VoteType.drinkAdd);
+                        update();
+                    });
                     (document.getElementById("drinks-minus-btn-" + i) as HTMLButtonElement)
                         .disabled = data[i][4];
-                    document.getElementById(("drinks-minus-btn-" + i)).onclick = function () {
-                        submitVote(DrinksVoteUpdater.instance.userId, data[i][0], VoteType.drinkRemove);
-                        DrinksVoteUpdater.instance.update();
-                    };
+                    // remove previously added click event handler, and add a new
+                    $(`#drinks-minus-btn-${i}`).off("click").on("click", function () {
+                        submitVote(data[i][0], VoteType.drinkRemove);
+                        update();
+                    });
                 }
             },
             "error": function (err: any) {
@@ -113,11 +136,11 @@ class DrinksVoteUpdater {
     /**
      * Adds a new drink.
      */
-    async addSuggestion() {
+    async function addSuggestion() {
         // update the table to make sure that it contains the correct data, so we can check if the suggestion already
         // exists in the table (this update call is not strictly necessary, but secures that we don't add an item
         // that already exists in the table even if the user changed the content using the in-browser console)
-        await this.update();
+        await update();
 
         let suggestion: string = (document.getElementById("drink-suggestion") as HTMLInputElement).value.trim();
         if (suggestion == null || suggestion == "" || suggestion.length > 200) {
@@ -142,12 +165,12 @@ class DrinksVoteUpdater {
             "dataType": "json",
             "data": {
                 action: VoteType.drinkAddSuggestion,
-                userId: DrinksVoteUpdater.instance.userId,
+                userId: USER_ID,
                 drinkName: suggestion
             },
             "success": function (data: any) {
                 if (data.success) {
-                    DrinksVoteUpdater.instance.update();
+                    update();
                     Toast.showToast("Sikeres művelet", "Javaslatod rögzítésre került.",
                         BootstrapColors.success);
                     console.log("suggestion successfully saved");
