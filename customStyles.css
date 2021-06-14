@@ -1,5 +1,5 @@
 @keyframes float {
-    from { top: 10%; opacity: 0.8; }
+    from { top: 15vh; opacity: 0.6; }
     to { top: 0; opacity: 1; }
 }
 
@@ -7,7 +7,7 @@
     width: fit-content;
     position: relative;
     animation-name: float;
-    animation-duration: 1s;
+    animation-duration: 1.2s;
     margin: 3% auto;
     alignment: center;
 }
