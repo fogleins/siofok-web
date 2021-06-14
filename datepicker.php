@@ -9,6 +9,12 @@
         Utils::logEvent(LogType::PAGE_VISIT(), "datepicker.php", $_SESSION['userId']);
     }
     include "include/header.php";
+    // allow only verified users
+    if (!Utils::requireRole("verified")) {
+        include "include/403.php";
+        http_response_code(403);
+        die();
+    }
 ?>
 <!doctype html>
 <html lang="hu">

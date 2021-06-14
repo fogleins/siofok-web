@@ -23,9 +23,9 @@
     <h5>Nincs jogosultságod az oldal megtekintéséhez.</h5>
     <div class="container col-sm-10 col-lg-6 mt-5">
     <p>
-        Megjegyzés: az "Italszavazás" és "Lejátszási lista" oldalak eléréséhez "verified" jogosultsággal kell
-        rendelkezned. Ezt néhány percen, de legfeljebb órán belül meg kell kapnod. A jogosultságaidat a
-        <a href="profile.php">profilodon</a> ellenőrizheted.
+        Megjegyzés: az "Időpontválasztás", "Italszavazás" és "Lejátszási lista" oldalak eléréséhez "verified"
+        jogosultsággal kell rendelkezned. Ezt néhány percen, de legfeljebb órán belül meg kell kapnod.
+        A jogosultságaidat a <a href="profile.php">profilodon</a> ellenőrizheted.
     </p>
     </div>
   </div>
