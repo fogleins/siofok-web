@@ -23,7 +23,7 @@
 ?>
 <div class="wrapper-div">
 <h2 class="text-primary text-center h2-top-center-margin">Gyakran ismételt kérdések</h2>
-<div class="container playlist-div col-lg-4">
+<div class="container playlist-div col-sm-10 col-lg-6">
     <div class="floating-div playlist-div">
     <?php
         $db = Utils::getDbObject();
