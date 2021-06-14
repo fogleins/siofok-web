@@ -1,6 +1,7 @@
 <?php
     session_start();
     include "utils.php";
+    include "include/header.php";
     // if the user is not logged in, we redirect them to the login page
     if (!isset($_SESSION['access_token'])) {
         header("Location: login.php");
@@ -28,10 +29,7 @@
     <link rel="stylesheet" href="include/tagEditor/jquery.tag-editor.css">
 </head>
 <body>
-<?php
-    include "include/header.php";
-    echo "<h2 class='text-primary text-center h2-top-center-margin'>Adminisztáció</h2>";
-?>
+<h2 class='text-primary text-center h2-top-center-margin'>Adminisztáció</h2>
 <script src="include/tagEditor/jquery-ui.min.js"></script>
 <script src="include/tagEditor/jquery.tag-editor.min.js"></script>
 <script src="include/tagEditor/jquery.caret.min.js"></script>
@@ -43,7 +41,7 @@
 </div>
 <!-- toasts end -->
 <div class="wrapper-div">
-    <div class="floating-div col-sm-10 col-lg-7">
+    <div class="container floating-div col-sm-10 col-lg-7">
         <h3 class="text-secondary">Felhasználók kezelése</h3>
         <div id="unsaved-changes" hidden>
             <h5 class="text-warning">Nem mentett módosítások:</h5>
@@ -52,7 +50,7 @@
         <div class="scrollable-table-container" id="users-container">
             <table class="table table-striped table-hover" id="user-management"></table>
         </div>
-        <h3 class="text-secondary">Rendszernapló</h3>
+        <h3 class="text-secondary mt-5">Rendszernapló</h3>
         <div id="logs-container" class="scrollable-table-container">
             <table class="table table-striped table-hover" id="logs">
                 <thead><tr><th>ID</th><th style="width: 18%">Timestamp</th><th>Type</th><th>Description</th></tr></thead>

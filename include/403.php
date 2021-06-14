@@ -16,7 +16,6 @@
     }
 </script>
 <div class="wrapper-div">
-<?php include "include/header.php" ?>
 <h2 class="text-primary text-center h2-top-center-margin">403 Forbidden</h2>
   <div class="floating-div col-sm-8 col-lg-10 text-center" style="align-items: flex-start">
     <img id="dropsicle" src="include/dropsicle.svg" alt="error-icon">
