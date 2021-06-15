@@ -20,6 +20,14 @@
         }
 
         if ($_POST['action'] == VoteType::drinkAddSuggestion) {
+            $stmt = $db->prepare("SELECT * FROM drinks WHERE name = ?");
+            $stmt->bind_param("s", $_POST["drinkName"]);
+            $stmt->execute();
+            if (strlen($_POST["drinkName"]) > 200 || $stmt->get_result()->num_rows > 0) {
+                echo json_encode(array("success" => false));
+                exit();
+            }
+            $stmt->free_result();
             // insert the suggested drink into the database
             $stmt = $db->prepare("INSERT INTO drinks (suggested_by, name) VALUES (?, ?)");
             $stmt->bind_param("is", $_SESSION['userId'], $_POST['drinkName']);
