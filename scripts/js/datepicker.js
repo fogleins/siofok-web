@@ -58,7 +58,7 @@ var Datepicker;
                     ],
                     "firstDay": 1
                 },
-                "minDate": "2021. 06. 12.",
+                "minDate": new Date(Date.now()).toLocaleDateString("hu"),
                 "maxDate": "2021. 09. 05.",
                 "startDate": startDate,
                 "endDate": endDate
@@ -81,6 +81,16 @@ var Datepicker;
                             if (element.getAttribute("data-recordId") == null) {
                                 element.setAttribute("data-recordId", response.recordId);
                             }
+                            let table = document.getElementById("date-picker-table");
+                            let rows = table.rows;
+                            for (let i = 0; i < rows.length - 1; i++) {
+                                for (let j = i + 1; j < rows.length - 1; j++) {
+                                    if (rows[j].children[0] != null && response.data[i].response_ID == rows[j].children[0]
+                                        .children[0].children[0].getAttribute("data-recordId")) {
+                                        rows[i].parentNode.insertBefore(rows[j], rows[i]);
+                                    }
+                                }
+                            }
                         }
                         else {
                             Toast.showToast("Hiba", response.message, BootstrapColors.danger);
@@ -102,23 +112,7 @@ var Datepicker;
         if (USER_ID == null) {
             yield getUserId();
         }
-        $.ajax({
-            url: "datepicker_xhr_handler.php",
-            method: "GET",
-            timeout: 5000,
-            dataType: "json",
-            data: {
-                userId: USER_ID,
-                action: "query"
-            },
-            success: function (response) {
-                if (response.success) {
-                    for (let i = 0; i < response.data.length; i++) {
-                        addInputRow(response.data[i].response_ID, new Date(response.data[i].start_date).toLocaleDateString("hu"), new Date(response.data[i].end_date).toLocaleDateString("hu"));
-                    }
-                }
-            }
-        });
+        listDates();
     }));
     function addInputRow(recordId, startDate, endDate) {
         let table = document.getElementById("date-picker-table");
@@ -181,6 +175,25 @@ var Datepicker;
         let row = parent.parentElement;
         let table = row.parentElement;
         table.removeChild(row);
+    }
+    function listDates() {
+        $.ajax({
+            url: "datepicker_xhr_handler.php",
+            method: "GET",
+            timeout: 5000,
+            dataType: "json",
+            data: {
+                userId: USER_ID,
+                action: "query"
+            },
+            success: function (response) {
+                if (response.success) {
+                    for (let i = 0; i < response.data.length; i++) {
+                        addInputRow(response.data[i].response_ID, new Date(response.data[i].start_date).toLocaleDateString("hu"), new Date(response.data[i].end_date).toLocaleDateString("hu"));
+                    }
+                }
+            }
+        });
     }
 })(Datepicker || (Datepicker = {}));
 //# sourceMappingURL=datepicker.js.map

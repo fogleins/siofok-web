@@ -10,6 +10,7 @@
     }
 
     $db = Utils::getDbObject();
+    $array = array();
     try {
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $stmt = null;
@@ -41,22 +42,20 @@
                 $result = $stmt->get_result();
                 $recordId = $result->fetch_row()[0];
             }
-            echo json_encode(array("success" => $success, "recordId" => $recordId));
+            echo json_encode(array("success" => $success, "recordId" => $recordId, "data" => getAllRecords($db)));
         } else if (isset($_POST["action"]) && $_POST["action"] == "delete") {
             $stmt = $db->prepare("DELETE FROM datepicker_responses WHERE response_ID = ?");
             $stmt->bind_param("i", $_POST["recordId"]);
             echo json_encode(array("success" => $stmt->execute()));
         } else if (isset($_GET["action"]) && $_GET["action"] == "query") {
-            $result = $db->query("SELECT response_ID, start_date, end_date FROM datepicker_responses "
-                . "WHERE user_ID = " . $_SESSION['userId']);
-            $result = $result->fetch_all(MYSQLI_ASSOC);
+            $result = getAllRecords($db);
             echo json_encode(array("success" => $result != false, "data" => $result));
         } else /* if editing the range */ {
-            if (inputIsValidDateRange($db)) {
+            if (inputIsValidDateRange($db, $_POST["recordId"])) {
                 $stmt = $db->prepare("UPDATE datepicker_responses SET start_date = ?, end_date = ? "
                     . "WHERE response_ID = ?");
                 $stmt->bind_param("ssi", $_POST["start"], $_POST["end"], $_POST["recordId"]);
-                echo json_encode(array("success" => $stmt->execute()));
+                echo json_encode(array("success" => $stmt->execute(), "data" => getAllRecords($db)));
             }
         }
     } catch (Exception $exception) {
@@ -70,12 +69,20 @@
      * @param $db: The database object.
      * @return bool False if dates overlap, true otherwise.
      */
-    function inputIsValidDateRange(mysqli $db): bool {
-        $stmt = $db->prepare("SELECT response_ID FROM datepicker_responses WHERE user_ID = ? "
-            . "AND start_date BETWEEN ? AND ? OR end_date BETWEEN ? AND ? "
-            . "OR ? BETWEEN start_date AND end_date OR ? BETWEEN start_date AND end_date");
-        $stmt->bind_param("issssss", $_SESSION["userId"], $_POST["start"], $_POST["end"],
-            $_POST["start"], $_POST["end"], $_POST["start"], $_POST["end"]);
+    function inputIsValidDateRange(mysqli $db, $recordId = null): bool {
+        if ($recordId != null) {
+            $stmt = $db->prepare("SELECT response_ID FROM datepicker_responses WHERE user_ID = ? AND response_ID != ? "
+                . "AND (start_date BETWEEN ? AND ? OR end_date BETWEEN ? AND ? "
+                . "OR ? BETWEEN start_date AND end_date OR ? BETWEEN start_date AND end_date)");
+            $stmt->bind_param("iissssss", $_SESSION["userId"], $recordId, $_POST["start"], $_POST["end"],
+                $_POST["start"], $_POST["end"], $_POST["start"], $_POST["end"]);
+        } else {
+            $stmt = $db->prepare("SELECT response_ID FROM datepicker_responses WHERE user_ID = ? "
+                . "AND (start_date BETWEEN ? AND ? OR end_date BETWEEN ? AND ? "
+                . "OR ? BETWEEN start_date AND end_date OR ? BETWEEN start_date AND end_date)");
+            $stmt->bind_param("issssss", $_SESSION["userId"], $_POST["start"], $_POST["end"],
+                $_POST["start"], $_POST["end"], $_POST["start"], $_POST["end"]);
+        }
         if ($stmt->execute()) {
             if ($stmt->get_result()->num_rows > 0) {
                 echo json_encode(array("success" => false, "message" => "A megadott időszak átfedésben van egy "
@@ -88,4 +95,15 @@
             echo json_encode(array("success" => false));
             return false;
         }
+    }
+
+    /**
+     * Returns all date ranges entered by the user.
+     * @param mysqli $db The db object.
+     * @return mixed An array of the submitted date ranges.
+     */
+    function getAllRecords(mysqli $db) {
+        $result = $db->query("SELECT response_ID, start_date, end_date FROM datepicker_responses "
+            . "WHERE user_ID = " . $_SESSION['userId'] . " ORDER BY start_date");
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
