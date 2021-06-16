@@ -14,7 +14,7 @@
     include "include/header.php";
     session_start();
     if (!isset($_SESSION['access_token'])) {
-        echo "<h2 class='text-warning text-center' style='margin-top: 15%'>A folytatáshoz be kell jelentkezned.</h2>";
+        header("Location: login.php");
         $_SESSION['redirect'] = "playlist.php";
         exit();
     } else {

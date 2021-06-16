@@ -5,6 +5,7 @@
     // if the user is not logged in, we redirect them to the login page
     if (!isset($_SESSION['access_token'])) {
         header("Location: login.php");
+        $_SESSION["redirect"] = "admin.php";
         exit();
     } else {
         Utils::logEvent(LogType::PAGE_VISIT(), "admin.php", $_SESSION['userId']);
