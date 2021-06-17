@@ -64,9 +64,10 @@
             echo json_encode(array("success" => $result != false, "data" => $result));
         } else /* if editing the range */ {
             if (inputIsValidDateRange($db, $_POST["recordId"])) {
-                $stmt = $db->prepare("UPDATE datepicker_responses SET start_date = ?, end_date = ? "
-                    . "WHERE response_ID = ?");
-                $stmt->bind_param("ssi", $_POST["start"], $_POST["end"], $_POST["recordId"]);
+                $stmt = $db->prepare("UPDATE datepicker_responses SET start_date = ?, end_date = ?, "
+                    . "availability = ? WHERE response_ID = ?");
+                $stmt->bind_param("ssii", $_POST["start"], $_POST["end"], $_POST["availability"],
+                    $_POST["recordId"]);
                 $success = $stmt->execute();
                 echo json_encode(array("success" => $success, "data" => getAllRecords($db)));
                 if ($success) {
@@ -120,7 +121,7 @@
      * @return mixed An array of the submitted date ranges.
      */
     function getAllRecords(mysqli $db) {
-        $result = $db->query("SELECT response_ID, start_date, end_date FROM datepicker_responses "
+        $result = $db->query("SELECT response_ID, start_date, end_date, availability FROM datepicker_responses "
             . "WHERE user_ID = " . $_SESSION['userId'] . " ORDER BY start_date");
         return $result->fetch_all(MYSQLI_ASSOC);
     }

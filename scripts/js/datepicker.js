@@ -63,45 +63,49 @@ var Datepicker;
                 "startDate": startDate,
                 "endDate": endDate
             }, function (start, end, label) {
-                $.ajax({
-                    method: "POST",
-                    url: "datepicker_xhr_handler.php",
-                    timeout: 5000,
-                    dataType: "json",
-                    data: {
-                        userId: USER_ID,
-                        availability: Availability.available,
-                        start: start.format("YYYY-MM-DD"),
-                        end: end.format("YYYY-MM-DD"),
-                        recordId: element.getAttribute("data-recordId")
-                    },
-                    success: function (response) {
-                        if (response.success) {
-                            Toast.showToast("Sikeres mentés", "A megadott időszak mentve.", BootstrapColors.success);
-                            if (element.getAttribute("data-recordId") == null) {
-                                element.setAttribute("data-recordId", response.recordId);
-                            }
-                            let table = document.getElementById("date-picker-table");
-                            let rows = table.rows;
-                            for (let i = 0; i < rows.length - 1; i++) {
-                                for (let j = i + 1; j < rows.length - 1; j++) {
-                                    if (rows[j].children[0] != null && response.data[i].response_ID == rows[j].children[0]
-                                        .children[0].children[0].getAttribute("data-recordId")) {
-                                        rows[i].parentNode.insertBefore(rows[j], rows[i]);
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            Toast.showToast("Hiba", response.message, BootstrapColors.danger);
-                        }
-                    },
-                    error: function (error) {
-                        Toast.showToast("Hiba", "Az AJAX-kérés során hiba lépett fel. Részletek a konzolon.", BootstrapColors.danger);
-                        console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
-                    }
-                });
+                postChanges(element, start, end, label);
             });
+        });
+    }
+    function postChanges(element, start, end, label) {
+        $.ajax({
+            method: "POST",
+            url: "datepicker_xhr_handler.php",
+            timeout: 5000,
+            dataType: "json",
+            data: {
+                userId: USER_ID,
+                availability: document.getElementById(element.id + "IsBusy")
+                    .checked ? Availability.busy : Availability.available,
+                start: start.format("YYYY-MM-DD"),
+                end: end.format("YYYY-MM-DD"),
+                recordId: element.getAttribute("data-recordId")
+            },
+            success: function (response) {
+                if (response.success) {
+                    Toast.showToast("Sikeres mentés", "A megadott időszak mentve.", BootstrapColors.success);
+                    if (element.getAttribute("data-recordId") == null) {
+                        element.setAttribute("data-recordId", response.recordId);
+                    }
+                    let table = document.getElementById("date-picker-table");
+                    let rows = table.rows;
+                    for (let i = 0; i < rows.length - 1; i++) {
+                        for (let j = i + 1; j < rows.length - 1; j++) {
+                            if (rows[j].children[0] != null && response.data[i].response_ID == rows[j].children[0]
+                                .children[0].children[0].getAttribute("data-recordId")) {
+                                rows[i].parentNode.insertBefore(rows[j], rows[i]);
+                            }
+                        }
+                    }
+                }
+                else {
+                    Toast.showToast("Hiba", response.message, BootstrapColors.danger);
+                }
+            },
+            error: function (error) {
+                Toast.showToast("Hiba", "Az AJAX-kérés során hiba lépett fel. Részletek a konzolon.", BootstrapColors.danger);
+                console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
+            }
         });
     }
     $(() => __awaiter(this, void 0, void 0, function* () {
@@ -112,9 +116,16 @@ var Datepicker;
         if (USER_ID == null) {
             yield getUserId();
         }
-        listDates();
+        yield listDates();
     }));
-    function addInputRow(recordId, startDate, endDate) {
+    function addInputRow(recordId, startDate, endDate, availability) {
+        if (typeof startDate == "string") {
+            startDate = moment(startDate, "YYYY. MM. DD.");
+        }
+        if (typeof endDate == "string") {
+            endDate = moment(endDate, "YYYY. MM. DD.");
+        }
+        let id = nextId;
         let table = document.getElementById("date-picker-table");
         let row = table.insertRow(table.rows.length - 1);
         let cell = row.insertCell(0);
@@ -134,11 +145,43 @@ var Datepicker;
         let btnId = `delete-btn-for-rangePicker${nextId}`;
         button.id = btnId;
         button.textContent = "Törlés";
+        let checkboxDiv = document.createElement("div");
+        checkboxDiv.classList.add("input-group-text");
+        let busy = document.createElement("input");
+        busy.id = `rangePicker${nextId}IsBusy`;
+        busy.type = "checkbox";
+        busy.checked = availability == Availability.busy;
+        busy.classList.add("form-check-input");
         initDatePicker(textField, startDate, endDate);
+        checkboxDiv.setAttribute("data-toggle", "tooltip");
+        checkboxDiv.setAttribute("data-bs-container", "div");
+        checkboxDiv.setAttribute("data-bs-placement", "top");
+        checkboxDiv.setAttribute("data-bs-html", "true");
+        checkboxDiv.title = "<b>Elfoglaltnak jelölés</b><br>A megadott időszak alapértelmezésben szabadként kerül " +
+            "mentésre. Ha inkább azt adnád meg, hogy mikor <em>nem</em> érsz rá, jelöld be ezt a négyzetet.";
         div.appendChild(textField);
+        checkboxDiv.appendChild(busy);
+        div.appendChild(checkboxDiv);
         div.appendChild(button);
         cell.appendChild(div);
         $(`#${btnId}`).on("click", () => removeInputRow(button));
+        $('[data-toggle="tooltip"]').tooltip();
+        $(`#rangePicker${id}IsBusy`).on("change", () => {
+            let checkbox = document.getElementById(`rangePicker${id}IsBusy`);
+            let rangePicker = $(`#rangePicker${id}`);
+            startDate = rangePicker.data("daterangepicker").startDate;
+            endDate = rangePicker.data("daterangepicker").endDate;
+            if ((typeof startDate != "undefined" && typeof endDate != "undefined")
+                && startDate.format("YYYY-MM-DD") != endDate.format("YYYY-MM-DD")
+                && textField.getAttribute("data-recordId") != null) {
+                postChanges(textField, startDate, endDate);
+            }
+            else {
+                checkbox.checked = false;
+                Toast.showToast("Figyelmeztetés", "Először add meg a dátumot, " +
+                    "a jelölőnégyzetet csak utána jelölheted be.", BootstrapColors.warning);
+            }
+        });
     }
     function removeInputRow(initiatingButton) {
         let textfieldId = initiatingButton.getAttribute("data-for-textfield");
@@ -177,22 +220,24 @@ var Datepicker;
         table.removeChild(row);
     }
     function listDates() {
-        $.ajax({
-            url: "datepicker_xhr_handler.php",
-            method: "GET",
-            timeout: 5000,
-            dataType: "json",
-            data: {
-                userId: USER_ID,
-                action: "query"
-            },
-            success: function (response) {
-                if (response.success) {
-                    for (let i = 0; i < response.data.length; i++) {
-                        addInputRow(response.data[i].response_ID, new Date(response.data[i].start_date).toLocaleDateString("hu"), new Date(response.data[i].end_date).toLocaleDateString("hu"));
+        return __awaiter(this, void 0, void 0, function* () {
+            yield $.ajax({
+                url: "datepicker_xhr_handler.php",
+                method: "GET",
+                timeout: 5000,
+                dataType: "json",
+                data: {
+                    userId: USER_ID,
+                    action: "query"
+                },
+                success: function (response) {
+                    if (response.success) {
+                        for (let i = 0; i < response.data.length; i++) {
+                            addInputRow(response.data[i].response_ID, new Date(response.data[i].start_date).toLocaleDateString("hu"), new Date(response.data[i].end_date).toLocaleDateString("hu"), response.data[i].availability);
+                        }
                     }
                 }
-            }
+            });
         });
     }
 })(Datepicker || (Datepicker = {}));
