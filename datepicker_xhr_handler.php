@@ -41,12 +41,24 @@
             if ($success = $stmt->execute()) {
                 $result = $stmt->get_result();
                 $recordId = $result->fetch_row()[0];
+                Utils::logEvent(LogType::INFO(), "Időpontválasztás hozzáadva. Időszak: "
+                    . $_POST["start"] . " - " . $_POST["end"], $_SESSION["userId"]);
             }
             echo json_encode(array("success" => $success, "recordId" => $recordId, "data" => getAllRecords($db)));
         } else if (isset($_POST["action"]) && $_POST["action"] == "delete") {
+            $stmt = $db->prepare("SELECT start_date, end_date FROM datepicker_responses WHERE response_ID = ?");
+            $stmt->bind_param("i", $_POST["recordId"]);
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_row();
+            $stmt->free_result();
             $stmt = $db->prepare("DELETE FROM datepicker_responses WHERE response_ID = ?");
             $stmt->bind_param("i", $_POST["recordId"]);
-            echo json_encode(array("success" => $stmt->execute()));
+            $success = $stmt->execute();
+            echo json_encode(array("success" => $success));
+            if ($success) {
+                Utils::logEvent(LogType::INFO(), "Időpontválasztás törölve. Törölt időszak: "
+                    . $result[0] . " - " . $result[1], $_SESSION["userId"]);
+            }
         } else if (isset($_GET["action"]) && $_GET["action"] == "query") {
             $result = getAllRecords($db);
             echo json_encode(array("success" => $result != false, "data" => $result));
@@ -55,7 +67,12 @@
                 $stmt = $db->prepare("UPDATE datepicker_responses SET start_date = ?, end_date = ? "
                     . "WHERE response_ID = ?");
                 $stmt->bind_param("ssi", $_POST["start"], $_POST["end"], $_POST["recordId"]);
-                echo json_encode(array("success" => $stmt->execute(), "data" => getAllRecords($db)));
+                $success = $stmt->execute();
+                echo json_encode(array("success" => $success, "data" => getAllRecords($db)));
+                if ($success) {
+                    Utils::logEvent(LogType::INFO(), "Időpontválasztás módosítva. Új érték: "
+                        . $_POST["start"] . " - " . $_POST["end"], $_SESSION["userId"]);
+                }
             }
         }
     } catch (Exception $exception) {
