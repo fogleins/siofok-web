@@ -28,6 +28,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="profile.php">Profil</a></li>
+                        <li><a class="dropdown-item" href="noticeboard.php">Üzenőfal</a></li>
                         <li><a class="dropdown-item disabled" href="#">Résztvevők</a></li>
                         <li><a class="dropdown-item" href="faq.php">GYIK</a></li>
                         <li><a class="dropdown-item" href="issue_report.php">Hibabejelentés</a></li>
