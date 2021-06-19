@@ -62,6 +62,14 @@
         } else if (isset($_GET["action"]) && $_GET["action"] == "query") {
             $result = getAllRecords($db);
             echo json_encode(array("success" => $result != false, "data" => $result));
+        } else if (isset($_GET["action"]) && $_GET["action"] == "queryAll") {
+            if (Utils::requireRole("admin")) {
+                $result = $db->query("SELECT response_ID, start_date, end_date, availability FROM datepicker_responses "
+                    . "ORDER BY start_date");
+                echo json_encode(array("success" => true, "data" => $result->fetch_all(MYSQLI_ASSOC)));
+            } else {
+                echo json_encode(array("success" => false));
+            }
         } else /* if editing the range */ {
             if (inputIsValidDateRange($db, $_POST["recordId"])) {
                 $stmt = $db->prepare("UPDATE datepicker_responses SET start_date = ?, end_date = ?, "

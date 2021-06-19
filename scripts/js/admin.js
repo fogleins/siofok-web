@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var Admin;
 (function (Admin) {
     let Action;
@@ -166,6 +175,7 @@ var Admin;
             document.getElementById("unsaved-changes").hidden = true;
             document.getElementById("unsaved-changes-details").textContent = null;
         });
+        buildDatepickerTables();
     });
     function refreshUserRoles() {
         $.ajax({
@@ -203,6 +213,89 @@ var Admin;
             }
         }
         return null;
+    }
+    function buildDatepickerTables() {
+        let datepickerAllAnswersTable = document.getElementById("datepicker-all");
+        let datepickerAvailableTable = document.getElementById("datepicker-available");
+        let datepickerBusyTable = document.getElementById("datepicker-busy");
+        let tables = [datepickerAllAnswersTable, datepickerAvailableTable, datepickerBusyTable];
+        let startDate = moment("2021-06-21");
+        let endDate = moment("2021-09-05");
+        let row = null;
+        let infoRow = null;
+        let cell = null;
+        for (const table of tables) {
+            for (let i = moment(startDate); i <= endDate; i.add(1, "day")) {
+                if (i.day() == 1) {
+                    row = table.insertRow(table.rows.length);
+                    infoRow = table.insertRow(table.rows.length);
+                }
+                cell = row.insertCell(i.day() - 1);
+                let date = i.format("YYYY-MM-DD");
+                cell.textContent = date;
+                let infoCell = infoRow.insertCell(i.day() - 1);
+                infoCell.textContent = "0";
+                infoCell.id = `${table.id}-for-${date}`;
+                switch (i.month()) {
+                    case 5:
+                        cell.classList.add("table-warning");
+                        break;
+                    case 6:
+                        cell.classList.add("table-success");
+                        break;
+                    case 7:
+                        cell.classList.add("table-primary");
+                        break;
+                    case 8:
+                        cell.classList.add("table-danger");
+                        break;
+                }
+            }
+        }
+        fillTables();
+    }
+    function fillTables() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (USER_ID == null) {
+                yield getUserId();
+            }
+            yield $.ajax({
+                method: "GET",
+                url: "datepicker_xhr_handler.php",
+                timeout: 3000,
+                dataType: "json",
+                data: {
+                    userId: USER_ID,
+                    action: "queryAll"
+                },
+                success: response => {
+                    if (response.success) {
+                        for (let i = 0; i < response.data.length; i++) {
+                            addAvailibilityDataToTable(response.data[i]);
+                        }
+                    }
+                }
+            });
+        });
+    }
+    function addAvailibilityDataToTable(data) {
+        for (let i = moment(data.start_date); i <= moment(data.end_date); i.add(1, "day")) {
+            let allTableEditCell = document.getElementById("datepicker-all-for-" + i.format("YYYY-MM-DD"));
+            let allTableAddValue = 0;
+            if (data.availability == 1) {
+                let editCell = document.getElementById("datepicker-available-for-" + i.format("YYYY-MM-DD"));
+                let count = parseInt(editCell.textContent, 10);
+                editCell.textContent = (count + 1).toString(10);
+                allTableAddValue = 1;
+            }
+            else {
+                let editCell = document.getElementById("datepicker-busy-for-" + i.format("YYYY-MM-DD"));
+                let count = parseInt(editCell.textContent, 10);
+                editCell.textContent = (count - 1).toString(10);
+                allTableAddValue = -1;
+            }
+            allTableEditCell.textContent = (parseInt(allTableEditCell.textContent, 10) + allTableAddValue).toString(10);
+        }
     }
 })(Admin || (Admin = {}));
 //# sourceMappingURL=admin.js.map

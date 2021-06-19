@@ -93,6 +93,13 @@
                 ?>
             </table>
         </div>
+        <script type="text/javascript" src="include/dateRangePicker/moment.min.js"></script>
+        <h3 class="text-secondary mt-5">Időpontválasztások (+)</h3>
+        <table class="table table-striped table-hover" id="datepicker-available"></table>
+        <h3 class="text-secondary mt-5">Időpontválasztások (-)</h3>
+        <table class="table table-striped table-hover" id="datepicker-busy"></table>
+        <h3 class="text-secondary mt-5">Időpontválasztások (összesített)</h3>
+        <table class="table table-striped table-hover" id="datepicker-all"></table>
     </div>
     <?php include "include/footer.php"; ?>
 </div>
