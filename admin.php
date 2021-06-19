@@ -72,6 +72,27 @@
                 ?>
             </table>
         </div>
+        <h3 class="text-secondary mt-5">Felhasználói hibajelentések</h3>
+        <div id="issues-container" class="scrollable-table-container">
+            <table class="table table-striped table-hover" id="issues">
+                <thead><tr><th style="width: 18%">Timestamp</th><th>Page</th><th>Description</th></tr></thead>
+                <?php
+                $db = Utils::getDbObject();
+                try {
+                    $logEntries = $db->query("SELECT timestamp, issue_page, issue_description FROM issues "
+                        . " ORDER BY timestamp DESC;");
+                    while ($row = $logEntries->fetch_row()) {
+                        echo "<tr class='log'><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2]
+                            . "</td></tr>";
+                    }
+                } catch (Exception $exception) {
+                    Utils::logEvent(LogType::ERROR(), "admin.php error: " . $exception->getMessage());
+                } finally {
+                    $db->close();
+                }
+                ?>
+            </table>
+        </div>
     </div>
     <?php include "include/footer.php"; ?>
 </div>
