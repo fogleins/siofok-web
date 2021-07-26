@@ -40,7 +40,7 @@
         }
         // get the user's last login
         $stmt = $db->prepare("SELECT MAX(timestamp) FROM users INNER JOIN log ON users.user_ID = log.user_ID "
-            . "WHERE log.user_ID = ? GROUP BY log.user_ID");
+            . "WHERE log.user_ID = ? AND log.event_type = 0 GROUP BY log.user_ID");
         $stmt->bind_param("i", $_SESSION['userId']);
         if ($stmt->execute()) {
             $stmt->bind_result($lastLogin);
