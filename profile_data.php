@@ -61,6 +61,22 @@
             $stmt->free_result();
         }
         $results['activities'] = $activities;
+        // get payment info
+        $paymentInfo = array();
+        $stmt = $db->prepare("SELECT amount, paid FROM fees LEFT OUTER JOIN users ON users.email = fees.email "
+            . "WHERE users.user_id = ?;");
+        $stmt->bind_param("i", $_SESSION['userId']);
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            $keys = ["amount", "paid"];
+            $paymentInfoTmp = $result->fetch_row();
+            for ($i = 0; $i < sizeof($paymentInfoTmp); $i++) {
+//                array_push($paymentInfo, $paymentInfoTmp);
+                $paymentInfo[$keys[$i]] = $paymentInfoTmp[$i];
+            }
+            $stmt->free_result();
+        }
+        $results['paymentInfo'] = $paymentInfo;
         $results["success"] = true;
         echo json_encode($results);
     } catch (Exception $exception) {

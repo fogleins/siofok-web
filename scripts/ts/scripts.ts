@@ -80,6 +80,26 @@ function loadProfileData(): void {
                             }
                             let thead: HTMLTableSectionElement = table.tHead = document.createElement("thead");
                             thead.innerHTML = "<tr><th style='min-width: 20ch'>Idő (legújabb elöl)</th><th>Leírás</th></tr>";
+                        } else if (dataKey == "paymentInfo") {
+                            let table: HTMLTableElement = document.getElementById("profile-data") as HTMLTableElement;
+                            for (const dataKeyKey in data[dataKey]) {
+                                let row: HTMLTableRowElement = table.insertRow(table.rows.length);
+                                for (let k = 0; k < 2; k++) {
+                                    let cell: HTMLTableCellElement = row.insertCell(k);
+                                    if (k == 0) {
+                                        cell.classList.add("text-primary");
+                                        cell.innerHTML = getUiTextForJsonKey(dataKeyKey);
+                                    } else {
+                                        if (dataKeyKey == "paid") {
+                                            data[dataKey][dataKeyKey] == "false" ? cell.classList.add("text-danger")
+                                                : cell.classList.add("text-success");
+                                        } else {
+                                            cell.classList.add("text-secondary");
+                                        }
+                                        cell.innerHTML = data[dataKey][dataKeyKey];
+                                    }
+                                }
+                            }
                         } else {
                             let row: HTMLTableRowElement = table.insertRow(i);
                             for (let j = 0; j < 2; j++) {
@@ -126,6 +146,10 @@ function getUiTextForJsonKey(jsonKey: string): string {
             return "Utolsó bejelentkezés";
         case "groups":
             return "Felhasználói csoportok";
+        case "amount":
+            return "Fizetendő összeg (Ft)";
+        case "paid":
+            return "Fizetve";
     }
 }
 

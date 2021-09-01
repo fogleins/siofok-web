@@ -73,6 +73,29 @@ function loadProfileData() {
                             let thead = table.tHead = document.createElement("thead");
                             thead.innerHTML = "<tr><th style='min-width: 20ch'>Idő (legújabb elöl)</th><th>Leírás</th></tr>";
                         }
+                        else if (dataKey == "paymentInfo") {
+                            let table = document.getElementById("profile-data");
+                            for (const dataKeyKey in data[dataKey]) {
+                                let row = table.insertRow(table.rows.length);
+                                for (let k = 0; k < 2; k++) {
+                                    let cell = row.insertCell(k);
+                                    if (k == 0) {
+                                        cell.classList.add("text-primary");
+                                        cell.innerHTML = getUiTextForJsonKey(dataKeyKey);
+                                    }
+                                    else {
+                                        if (dataKeyKey == "paid") {
+                                            data[dataKey][dataKeyKey] == "false" ? cell.classList.add("text-danger")
+                                                : cell.classList.add("text-success");
+                                        }
+                                        else {
+                                            cell.classList.add("text-secondary");
+                                        }
+                                        cell.innerHTML = data[dataKey][dataKeyKey];
+                                    }
+                                }
+                            }
+                        }
                         else {
                             let row = table.insertRow(i);
                             for (let j = 0; j < 2; j++) {
@@ -113,6 +136,10 @@ function getUiTextForJsonKey(jsonKey) {
             return "Utolsó bejelentkezés";
         case "groups":
             return "Felhasználói csoportok";
+        case "amount":
+            return "Fizetendő összeg (Ft)";
+        case "paid":
+            return "Fizetve";
     }
 }
 function logOuterLinkVisit(message) {
