@@ -11,7 +11,7 @@
 <script>
     // TODO: may be done with proper web server configuration
     // redirect to the main page if someone tries to access the error page directly
-    if (!document.referrer.includes("siofok2021")) {
+    if (!document.referrer.includes("siofok")) {
         window.location = "..";
     }
 </script>

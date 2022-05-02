@@ -1,7 +1,7 @@
 <?php include "includes.html"; ?>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
-        <a class="navbar-brand text-secondary" href=".">Siófok 2021</a>
+        <a class="navbar-brand text-secondary" href=".">Siófok 2022</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -35,7 +35,7 @@
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="admin.php">Admin</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="https://github.com/fogleins/siofok2021-web" target="_blank"
+                        <li><a class="dropdown-item" href="https://github.com/fogleins/siofok-web" target="_blank"
                                onclick="logOuterLinkVisit('GitHub')">GitHub</a></li>
                     </ul>
                 </li>

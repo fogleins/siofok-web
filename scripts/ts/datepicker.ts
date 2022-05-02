@@ -59,7 +59,7 @@ namespace Datepicker {
                 },
                 // make the first available date today
                 "minDate": new Date(Date.now()).toLocaleDateString("hu"),
-                "maxDate": "2021. 09. 05.",
+                "maxDate": "2022. 09. 04.",
                 "startDate": startDate,
                 "endDate": endDate
             }, function (start: moment.Moment, end: moment.Moment, label: string | null) {
