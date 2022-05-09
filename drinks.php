@@ -43,7 +43,7 @@
         <h2 class='text-primary'>Italszavazás</h2>
         <h6 id="drinks-subtitle" class='text-subtitle'></h6>
     </div>
-    <div class="floating-div col-sm-8 col-lg-5" id="votes-div">
+    <div class="floating-div col-sm-7 col-md-5 col-lg-4" id="votes-div">
         <?php
             echo "<h5 class='text-center text-secondary' style='margin-bottom: 8%' id='drinks-no-data' hidden> "
                 . "<i>Nincs megjelenítendő adat</i></h5>";

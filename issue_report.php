@@ -32,7 +32,7 @@
     <div class="text-center h2-top-center-margin">
         <h2 class="text-primary">Hibabejelentés</h2>
     </div>
-    <div class="floating-div col-sm-10 col-lg-6">
+    <div class="floating-div col-sm-8 col-md-5 col-lg-4">
         <table class="table table-borderless">
             <tr><td>
                 <label for="issue-page"></label>

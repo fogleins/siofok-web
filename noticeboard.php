@@ -36,7 +36,7 @@
             Javaslat by DAM, implementáció by me
         </h6>
     </div>
-    <div class="floating-div col-sm-10 col-lg-6" style="height: 30%">
+    <div class="floating-div col-sm-8 col-md-5 col-lg-4" style="height: 30%">
         <div class="container scrollable-table-container" id="noticeboard-container">
             <table class="table table-hover table-responsive" id="noticeboard"></table>
         </div>

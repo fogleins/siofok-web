@@ -4,7 +4,6 @@
 }
 
 .floating-div {
-    width: fit-content;
     position: relative;
     animation-name: float;
     animation-duration: 1.2s;
