@@ -41,7 +41,7 @@
         <?php
         $db = Utils::getDbObject();
         try {
-            $link = $db->query("SELECT link FROM playlist WHERE playlist_ID = 1");
+            $link = $db->query("SELECT link FROM playlist WHERE playlist_ID = 2");
             if ($link->num_rows > 0) {
                 echo "<a href='" . $link->fetch_row()[0] . "' role='button' id='playlist-btn'"
                     . " class='btn btn-primary btn-lg' target='_blank' onclick='logOuterLinkVisit(`Spotify`)'>"

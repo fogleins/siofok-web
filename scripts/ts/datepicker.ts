@@ -18,6 +18,9 @@ namespace Datepicker {
         let fieldID: string = "rangePicker" + nextId;
         element.id = fieldID;
         nextId++;
+        let today = new Date(Date.now());
+        let firstAvailableDate = new Date(2022, 4, 30);
+        let firstAvailableDatePlus1Day = new Date(firstAvailableDate.getTime() + 24 * 60 * 60 * 1000)
         $(function () {
             $(`input[id=${fieldID}]`).daterangepicker({
                 opens: "center",
@@ -58,10 +61,12 @@ namespace Datepicker {
                     "firstDay": 1
                 },
                 // make the first available date today
-                "minDate": new Date(Date.now()).toLocaleDateString("hu"),
+                "minDate": (today > firstAvailableDate ? today : firstAvailableDate).toLocaleDateString("hu"),
                 "maxDate": "2022. 09. 04.",
                 "startDate": startDate,
-                "endDate": endDate
+                "endDate": typeof endDate == "undefined" ?
+                    (today > firstAvailableDatePlus1Day ? new Date(today.getTime() + 24 * 60 * 60 * 1000)
+                        : firstAvailableDatePlus1Day).toLocaleDateString("hu") : endDate
             }, function (start: moment.Moment, end: moment.Moment, label: string | null) {
                 postChanges(element, start, end, label);
             });
